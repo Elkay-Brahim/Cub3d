@@ -13,9 +13,10 @@
 #include <mlx.h>
 #include <math.h>
 #include <stdio.h>
+#include <unistd.h>
 
 
-
+#define PI 3.14159265359
 #define mapWidth 24
 #define mapHeight 24
 #define screenWidth 1500
@@ -29,6 +30,26 @@ typedef struct s_data {
 	int		line_length;
 	int		endian;
 }				t_data;
+
+
+typedef struct s_beta{
+	t_data image;
+	void *mlx;
+	void *win;
+	int p_x;
+	int p_y;
+	int i;
+	int y;
+	float shfit_x;
+	float shfit_y;
+	float pdx;
+
+	float rx;
+	float ry;
+
+	float pdy;
+	float _const;
+}		t_beta;
 
 int worldMap[mapWidth][mapHeight]=
 {
@@ -106,72 +127,152 @@ static void	line_d(t_data mlx, int y, int x , int x1, int y1)
 	
 }
 
-int main()
+void drw_ray(t_beta beta)
 {
-	t_data image;
-	int i = 00, y = 0;
-	void *mlx = mlx_init();
-	void *win = mlx_new_window(mlx, screenWidth, screenHeight, "CUB3D");
-	image.img = mlx_new_image(mlx, screenWidth, screenHeight);
-	image.addr = mlx_get_data_addr(image.img, &image.bits_per_pixel, &image.line_length, &image.endian);
-	while(y < 14)
+	int r, mx, my, mp, dof;
+	float rx , ry, ra, xo, yo;
+	ra = beta._const;
+	r = 0;
+	while(r < 1)
 	{
-		i = 0;
-		while(i < 17)
+		dof = 0;
+		float atan = -1/tan(ra);
+		if(ra > PI)
+		{
+			ry = (((int)beta.y >> 6) << 6) - 0.0001;
+			rx = (beta.y - ry) * atan + beta.i;
+			yo = -64;
+			xo = -yo * atan;
+		}
+		if(ra < PI)
+		{
+			ry = (((int)beta.y >> 6) << 6) +64;
+			rx = (beta.y - ry) * atan + beta.i;
+			yo = 64;
+			xo = -yo * atan;
+		}
+		if(ra == 0 || ra == PI)
+		{
+			rx = beta.i;
+			ry = beta.y;
+			dof = 8;
+		}
+		while(dof < 8)
+		{
+			mx = (int) (rx) >> 6;
+			my = (int) (ry) >> 6;
+			mp = my * 14 + mx;
+			printf("%d\n", mp);
+			if (mp > 0 &&  mp < 17 * 14 && worldMap[beta.y][mp] == 1)
+				dof = 8;
+			else
+			{
+				rx+=xo;
+				ry+=yo;
+				dof+=1;
+			}
+		}
+		r++;
+	}
+	float tmp_x, tmp_y;
+	float destance_x = (float) ((beta.i*B+beta.shfit_x) - (beta.i*B+beta.shfit_x + rx));
+	float destance_y = (float) ((beta.y*B+beta.shfit_y )- (beta.y*B+beta.shfit_y + ry));
+	float step = fmax(fabs(destance_x), fabs(destance_y));
+	destance_x = (destance_x) / step;
+	destance_y = (destance_y) / step;
+	int it = 1;
+	tmp_x = beta.i*B+beta.shfit_x;
+	tmp_y = beta.y*B+beta.shfit_y;
+	while(it <= step)
+	{
+		my_mlx_pixel_put(&beta.image, tmp_x , tmp_y , 0xe50000);
+		tmp_x += destance_x;
+		tmp_y += destance_y;
+		it++;
+	}
+}
+
+void drw_line(t_beta beta)
+{
+	float tmp_x, tmp_y;
+	float destance_x = (float) ((beta.i*B+beta.shfit_x) - (beta.i*B+beta.shfit_x + beta.pdx * 5));
+	float destance_y = (float) ((beta.y*B+beta.shfit_y )- (beta.y*B+beta.shfit_y + beta.pdy * 5));
+	float step = fmax(fabs(destance_x), fabs(destance_y));
+	destance_x = (destance_x) / step;
+	destance_y = (destance_y) / step;
+	int it = 1;
+	tmp_x = beta.i*B+beta.shfit_x;
+	tmp_y = beta.y*B+beta.shfit_y;
+	while(it <= step)
+	{
+		my_mlx_pixel_put(&beta.image, tmp_x , tmp_y , 0x000000);
+		tmp_x += destance_x;
+		tmp_y += destance_y;
+		it++;
+	}
+}
+
+
+void randring(t_beta beta)
+{
+
+
+
+
+
+	while(beta.y < 14)
+	{
+		beta.i = 0;
+		while(beta.i < 17)
 		{
 			float x = 0;
 			while(x <= B)
 			{
 				int color;
 				float tmp_x1, tmp_y1;
-				float destance_x1 = (float) (i*B+x - (i)*B);
-				float destance_y1 = (float) (y*B - (y+1)*B);
+				float destance_x1 = (float) (beta.i*B+x - (beta.i)*B);
+				float destance_y1 = (float) (beta.y*B - (beta.y+1)*B);
 				float step1 = fmax(fabs(destance_x1), fabs(destance_y1));
 				destance_x1 = fabs(destance_x1) / step1;
 				destance_y1 = fabs(destance_y1) / step1;
 				int it1 = 1;
-				tmp_x1 = i*B;
-				tmp_y1 = y*B;
+				tmp_x1 = beta.i*B;
+				tmp_y1 = beta.y*B;
 				while(it1 <= step1)
 				{
 					// printf("%f  %f \n", tmp_x1, tmp_y1);
-					if(worldMap[y][i] == 1)
+					if(worldMap[beta.y][beta.i] == 1)
 					{
 						
-						my_mlx_pixel_put(&image, tmp_x1 , tmp_y1 , 0x00a86b);
+						my_mlx_pixel_put(&beta.image, tmp_x1 , tmp_y1 , 0x00a86b);
 						// my_mlx_pixel_put(&image, tmp_y1-B , tmp_x1 , 0xE73fff);
 					}
 					else
-						my_mlx_pixel_put(&image, tmp_x1 , tmp_y1 , 0xe3e1e6);
-					if ( x == 1)
-						my_mlx_pixel_put(&image, tmp_x1 , tmp_y1 , 0x000000);
+						my_mlx_pixel_put(&beta.image, tmp_x1 , tmp_y1 , 0xe3e1e6);
 					tmp_x1 += destance_x1;
 					tmp_y1 += destance_y1;
 					it1++;
 				}
 
 				float tmp_x, tmp_y;
-				float destance_x = (float) (i*B - (i+1)*B);
-				float destance_y = (float) (y*B+x - (y)*B);
+				float destance_x = (float) (beta.i*B - (beta.i+1)*B);
+				float destance_y = (float) (beta.y*B+x - (beta.y)*B);
 				float step = fmax(fabs(destance_x), fabs(destance_y));
 				destance_x = fabs(destance_x) / step;
 				destance_y = fabs(destance_y) / step;
 				int it = 1;
-				tmp_x = i*B;
-				tmp_y = y*B;
+				tmp_x = beta.i*B;
+				tmp_y = beta.y*B;
 				while(it <= step)
 				{
-					if(worldMap[y][i] == 1)
+					if(worldMap[beta.y][beta.i] == 1)
 					{
 						
 						// my_mlx_pixel_put(&image, tmp_y-B , tmp_x , 0xE73fff);
-						my_mlx_pixel_put(&image, tmp_x , tmp_y , 0x00a86b);
+						my_mlx_pixel_put(&beta.image, tmp_x , tmp_y , 0x00a86b);
 					}
 					else
-						my_mlx_pixel_put(&image, tmp_x , tmp_y , 0xe3e1e6);
-
-					if (x == 1)
-						my_mlx_pixel_put(&image, tmp_x , tmp_y , 0x000000);
+						my_mlx_pixel_put(&beta.image, tmp_x , tmp_y , 0xe3e1e6);
 
 					tmp_x += destance_x;
 					tmp_y += destance_y;
@@ -179,23 +280,124 @@ int main()
 				}
 				x++;
 			}
-				if (worldMap[y][i] == 5)
+
+
+
+				float tmp_x1, tmp_y1;
+				float destance_x1 = (float) (beta.i*B - (beta.i)*B);
+				float destance_y1 = (float) (beta.y*B - (beta.y+1)*B);
+				float step1 = fmax(fabs(destance_x1), fabs(destance_y1));
+				destance_x1 = fabs(destance_x1) / step1;
+				destance_y1 = fabs(destance_y1) / step1;
+				int it1 = 1;
+				tmp_x1 = beta.i*B;
+				tmp_y1 = beta.y*B;
+				while(it1 <= step1)
 				{
+					my_mlx_pixel_put(&beta.image, tmp_x1 , tmp_y1 , 0x000000);
+					tmp_x1 += destance_x1;
+					tmp_y1 += destance_y1;
+					it1++;
+				}
+
+				float tmp_x, tmp_y;
+				float destance_x = (float) (beta.i*B - (beta.i+1)*B);
+				float destance_y = (float) (beta.y*B - (beta.y)*B);
+				float step = fmax(fabs(destance_x), fabs(destance_y));
+				destance_x = fabs(destance_x) / step;
+				destance_y = fabs(destance_y) / step;
+				int it = 1;
+				tmp_x = beta.i*B;
+				tmp_y = beta.y*B;
+				while(it <= step)
+				{
+					my_mlx_pixel_put(&beta.image, tmp_x , tmp_y , 0x000000);
+
+					tmp_x += destance_x;
+					tmp_y += destance_y;
+					it++;
+				}
+
+
+				if (worldMap[beta.y][beta.i] == 5)
+				{
+					beta.p_x = beta.i;
+					beta.p_y = beta.y;
 					int b = 0;
 					while(b < 10)
 					{
-						my_mlx_pixel_put(&image, ((i*B)+b)- 5 , ((y*B))- 5 , 0xff0000);
-						my_mlx_pixel_put(&image, ((i*B))- 5 , ((y*B)+b)- 5 , 0xff0000);
-						my_mlx_pixel_put(&image, (((i*B)+10)-b)- 5 , ((y*B)+10)- 5 , 0xff0000);
-						my_mlx_pixel_put(&image, ((i*B)+10)- 5 , (((y*B)+10)-b)- 5 , 0xff0000);
+						my_mlx_pixel_put(&beta.image, ((beta.p_x*B)+b)+ beta.shfit_x , ((beta.p_y*B))+ beta.shfit_y , 0xff0000);
+						my_mlx_pixel_put(&beta.image, ((beta.p_x*B))+ beta.shfit_x , ((beta.p_y*B)+b)+ beta.shfit_y , 0xff0000);
+						my_mlx_pixel_put(&beta.image, (((beta.p_x*B)+10)-b)+ beta.shfit_x , ((beta.p_y*B)+10)+ beta.shfit_y , 0xff0000);
+						my_mlx_pixel_put(&beta.image, ((beta.p_x*B)+10)+ beta.shfit_x , (((beta.p_y*B)+10)-b)+ beta.shfit_y , 0xff0000);
 						b++;
 					}
+					drw_line(beta);
+					// drw_ray(beta);
 				}
-			i++;
+			beta.i++;
 		}
-		y++;
+		beta.y++;
 	}
-	
-	mlx_put_image_to_window(mlx, win, image.img, 0, 0);
-	mlx_loop(mlx);
+}
+
+
+
+int	key_hook(int keycode, t_beta *beta)
+{
+	int b = 0;
+	printf("%d\n", keycode);
+	if (keycode == 126)
+	{
+		beta->shfit_y -= beta->pdy;
+		beta->shfit_x -= beta->pdx;
+
+	}
+	else if (keycode == 125)
+	{
+		beta->shfit_y += beta->pdy;
+		beta->shfit_x += beta->pdx;
+
+	}
+	else if (keycode == 124)
+	{
+		beta->_const += 0.1;
+		if(beta->_const > 2 * PI)
+			beta->_const -= 2 * PI;
+		beta->pdx = cos(beta->_const) * 5;
+		beta->pdy = sin(beta->_const) * 5;
+	}
+	else if (keycode == 123)
+	{
+		beta->_const -= 0.1;
+		if (beta->_const < 0)
+			beta->_const += 2 * PI;
+		beta->pdx = cos(beta->_const) * 5;
+		beta->pdy = sin(beta->_const) * 5;
+
+	}
+
+	mlx_clear_window(beta->mlx, beta->win);
+	randring(*beta);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
+	return(0);
+}
+
+int main()
+{
+	t_beta beta;
+	beta.pdx = cos(beta._const) * 5;
+	beta.pdy = sin(beta._const) * 5;
+	beta.i = 00, beta.y = 0, beta.shfit_x = 5, beta.shfit_y = 5;
+	beta.mlx = mlx_init();
+	beta.win = mlx_new_window(beta.mlx, screenWidth, screenHeight, "CUB3D");
+	beta.image.img = mlx_new_image(beta.mlx, screenWidth, screenHeight);
+	beta.image.addr = mlx_get_data_addr(beta.image.img, &beta.image.bits_per_pixel, &beta.image.line_length, &beta.image.endian);
+
+	randring(beta);
+	mlx_put_image_to_window(beta.mlx, beta.win, beta.image.img, 0, 0);
+	mlx_key_hook(beta.win, key_hook, &beta);
+	mlx_hook(beta.win, 2, 0, key_hook, &beta);
+	// mlx_hook(vars.win, 17, 0, cross_window, &vars);
+	mlx_loop(beta.mlx);
 }
