@@ -21,8 +21,8 @@
 #define PI 3.14159265359
 #define mapWidth 24
 #define mapHeight 24
-#define screenHeight 600
-#define screenWidth 1400
+#define screenHeight 560
+#define screenWidth 1360
 #define B 40
 
 typedef struct s_data {
@@ -57,16 +57,16 @@ int worldMap[mapWidth][mapHeight]=
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
   {1,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1},
   {1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1},
   {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,1,1,1,1,5,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
@@ -224,6 +224,29 @@ void drw_line(t_beta *beta)
 		
 				break;
 			}
+			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 0 )
+			{
+				if (((beta->_const * 180)/PI  > 0 && (beta->_const * 180)/PI  < 90 )|| (beta->_const * 180)/PI  > 360)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)+1] == 1)
+						break;
+				}
+				else if ((beta->_const * 180)/PI  > 90 && (beta->_const * 180)/PI  < 180)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)-1] == 1)
+						break;
+				}
+				else if ((beta->_const * 180)/PI  > 180 && (beta->_const * 180)/PI  < 270)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)-1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)-1] == 1)
+						break;
+				}
+				else if ((beta->_const * 180)/PI  > 270 && (beta->_const * 180)/PI  < 360)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)+1] == 1)
+						break;
+				}
+			}
 
 
 			__j++;
@@ -249,15 +272,37 @@ void drw_line(t_beta *beta)
 			if ((int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) <= 0 || (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) > 16)
 				break;
 
-			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy+0.0000015 * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx+0.0000015 * new_des_y)/B)] == 1 )
-				break;
+			// if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy+0.0000015 * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx+0.0000015 * new_des_y)/B)] == 1 )
+			// 	break;
 			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1 )
 			{
 				printf("--------- y = %d  x= %d  des= %f   teta = %f\n", (int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B), (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B), new_des_y , (beta->_const * 180)/PI);
 			// 	// pause();
 				break;
 			}
-			
+			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 0 )
+			{
+				if ((beta->_const * 180)/PI  > 0 && (beta->_const * 180)/PI  < 90)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)+1] == 1)
+						break;
+				}
+				else if ((beta->_const * 180)/PI  > 90 && (beta->_const * 180)/PI  < 180)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)-1] == 1)
+						break;
+				}
+				else if ((beta->_const * 180)/PI  > 180 && (beta->_const * 180)/PI  < 270)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)-1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)-1] == 1)
+						break;
+				}
+				else if ((beta->_const * 180)/PI  > 270 && (beta->_const * 180)/PI  < 360)
+				{
+					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)-1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)+1] == 1)
+						break;
+				}
+			}
 
 			__j++;
 
