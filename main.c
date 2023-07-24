@@ -46,6 +46,12 @@ typedef struct s_beta{
 	float shfit_y;
 	float pdx;
 
+	float pos_px;
+	float pos_py;
+	float __des;
+	float intersect_x;
+	float intersect_y;
+
 	float rx;
 	float ry;
 
@@ -85,27 +91,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 static void	line_d(t_data mlx, int y, int x , int x1, int y1)
 {
-	// t_line	l;
-	// int		color;
 
-	// l.dx = (float)(map[y][x + 1].x - map[y][x].x);
-	// l.dy = (float)(map[y][x + 1].y - map[y][x].y);
-	// l.step = fmax(fabs(l.dx), fabs(l.dy));
-	// l.dx = l.dx / l.step;
-	// l.dy = l.dy / l.step;
-	// l.x = map[y][x].x;
-	// l.y = map[y][x].y;
-	// l.i = 1;
-	// while (l.i <= l.step)
-	// {
-	// 	my_mlx_pixel_put(&mlx->i, l.x + mlx->m.m_left, l.y + mlx->m.m_up, color);
-	// 	l.x += l.dx;
-	// 	l.y += l.dy;
-	// 	l.i++;
-	// }
-
-
-	//-----------------------------------------------------------------
 
 	float tmp_x, tmp_y;
 	float destance_x = (float) (x - x1);
@@ -136,7 +122,6 @@ void drw_line(t_beta *beta)
 	int it = 1;
 	int inter = 100;
 	int u = 0;
-	// printf("%f           %f   | %f          %f  \n", beta.pdx, beta.pdy, t_y, tmp_y);
 		float teta = 0 ;
 		float dx;
 		float dy;
@@ -158,6 +143,8 @@ void drw_line(t_beta *beta)
 	float __angle_start = beta->_const - 0.523598776;
 	float __angle_end = beta->_const + 0.523598776;
 		int __j = 1;
+	beta->pos_px = (beta->p_x*B+beta->shfit_x);
+	beta->pos_py = (beta->p_y*B+beta->shfit_y);
 	if (beta->_const-0.523598776 <= 0)
 	{
 		__angle_start = beta->_const + 5.75958653;
@@ -167,7 +154,6 @@ void drw_line(t_beta *beta)
 
 	while (beta->_const <= __angle_end)
 	{
-		printf ("------------------------------------\n");
 		__j = 1;
 
 
@@ -200,7 +186,6 @@ void drw_line(t_beta *beta)
 				dx = (beta->p_x * B  + beta->shfit_x) - (int)(((beta->p_x * B  + beta->shfit_x) / B) + 1 - __j) * B;
 				new_des_x = (dx / cos(beta->_const)) + 1 ;
 			}
-				// printf("%d  \n", (int)(((beta->p_x * B  + beta->shfit_x) / B) + __j ));
 
 
 
@@ -210,8 +195,6 @@ void drw_line(t_beta *beta)
 
 				angle_A = beta->_const;
 
-			// printf("%f %d\n", new_des_x, __j);
-
 			if ((int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B) <= 0 || (int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B) > 13)
 				break;
 			if ((int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B) <= 0 || (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B) > 16)
@@ -219,11 +202,7 @@ void drw_line(t_beta *beta)
 
 			
 			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1)
-			{
-				printf("------**--- y= %d  x= %d  des= %f  teta= %f\n", (int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B), (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B), new_des_x, (beta->_const * 180)/PI);
-		
 				break;
-			}
 			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 0 )
 			{
 				if (((beta->_const * 180)/PI  > 0 && (beta->_const * 180)/PI  < 90 )|| (beta->_const * 180)/PI  > 360)
@@ -272,14 +251,8 @@ void drw_line(t_beta *beta)
 			if ((int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) <= 0 || (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) > 16)
 				break;
 
-			// if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy+0.0000015 * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx+0.0000015 * new_des_y)/B)] == 1 )
-			// 	break;
 			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1 )
-			{
-				printf("--------- y = %d  x= %d  des= %f   teta = %f\n", (int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B), (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B), new_des_y , (beta->_const * 180)/PI);
-			// 	// pause();
 				break;
-			}
 			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 0 )
 			{
 				if ((beta->_const * 180)/PI  > 0 && (beta->_const * 180)/PI  < 90)
@@ -310,18 +283,17 @@ void drw_line(t_beta *beta)
 
 
 
-		float __x;
+		// float __x;
 		if (fabs(new_des_x) <= fabs(new_des_y))
-			__x = fabs(new_des_x);
+			beta->__des = fabs(new_des_x);
 		else
-			__x = fabs(new_des_y);
+			beta->__des = fabs(new_des_y);
+		beta->intersect_x = ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
+		beta->intersect_y = ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
 
-		// printf("PPPPPPPPP  %d   %d\n", (int)((beta->p_x*B+beta->shfit_x)/B),(int)((beta->p_y*B+beta->shfit_y )/B) );
-		// while(teta == 0)
-		// {
 			float tmp_x, tmp_y;
-			float destance_x = (float) ((beta->p_x*B+beta->shfit_x) - (int)((beta->p_x*B+beta->shfit_x + beta->pdx * __x )) );
-			float destance_y = (float) ((beta->p_y*B+beta->shfit_y ) - (int)((beta->p_y*B+beta->shfit_y + beta->pdy * __x)) );
+			float destance_x =  beta->pos_px - beta->intersect_x;
+			float destance_y =  beta->pos_py - beta->intersect_y;
 			float step = fmax(fabs(destance_x), fabs(destance_y));
 			destance_x = (destance_x) / step;
 			destance_y = (destance_y) / step;
@@ -340,24 +312,13 @@ void drw_line(t_beta *beta)
 
 				tmp_x += destance_x;
 				tmp_y += destance_y;
-
-				// tfo_x = (beta->p_x*B+beta->shfit_x) + ((tmp_x - (beta->p_x*B+beta->shfit_x))* cos(teta)) + (((beta->p_y*B+beta->shfit_y)-tmp_y)* sin(teta));
-				// tfo_y = (beta->p_y*B+beta->shfit_y) + ((tmp_x - (beta->p_x*B+beta->shfit_x))* sin(teta)) - (((beta->p_y*B+beta->shfit_y)-tmp_y)* cos(teta));
-				// my_mlx_pixel_put(&beta.image, (t_x) , (t_y) , 0xE50000);
-				// if (worldMap[(int)(tfo_y/B)][(int)(tfo_x/B)] == 1 )
-				// 	break;
-				// printf("%f %f \n", (tmp_y/B), (tmp_x/B));
 				my_mlx_pixel_put(&beta->image, (tmp_x) , (tmp_y) , 0xE50000);
 
 
 				it++;
 			}
 			it = 1;
-			// teta += 00.011;
 	
-		// }
-		// beta->_const += 00.00002;
-
 	}
 	beta->_const = save;
 	beta->pdy = __save;
@@ -367,11 +328,6 @@ void drw_line(t_beta *beta)
 
 void randring(t_beta *beta)
 {
-
-
-
-
-
 	while(beta->y < 14)
 	{
 		beta->i = 0;
@@ -392,13 +348,8 @@ void randring(t_beta *beta)
 				tmp_y1 = beta->y*B;
 				while(it1 <= step1)
 				{
-					// printf("%f  %f \n", tmp_x1, tmp_y1);
 					if(worldMap[beta->y][beta->i] == 1)
-					{
-						
 						my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0x00a86b);
-						// my_mlx_pixel_put(&image, tmp_y1-B , tmp_x1 , 0xE73fff);
-					}
 					else
 						my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0xe3e1e6);
 					tmp_x1 += destance_x1;
@@ -418,14 +369,9 @@ void randring(t_beta *beta)
 				while(it <= step)
 				{
 					if(worldMap[beta->y][beta->i] == 1)
-					{
-						
-						// my_mlx_pixel_put(&image, tmp_y-B , tmp_x , 0xE73fff);
 						my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0x00a86b);
-					}
 					else
 						my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0xe3e1e6);
-
 					tmp_x += destance_x;
 					tmp_y += destance_y;
 					it++;
@@ -475,9 +421,6 @@ void randring(t_beta *beta)
 				{
 					beta->p_x = beta->i;
 					beta->p_y = beta->y;
-
-					// drw_line1(beta);
-					// drw_ray(beta);
 				}
 			beta->i++;
 		}
@@ -496,8 +439,6 @@ void randring(t_beta *beta)
 
 	beta->i = 0;
 	beta->y = 0;
-					// printf("||| %f    %f\n", beta->shfit_x , beta->shfit_y );
-					// printf("||| ++++%d    %d\n", beta->i , beta->y );
 }
 
 
@@ -505,25 +446,21 @@ void randring(t_beta *beta)
 int	key_hook(int keycode, t_beta *beta)
 {
 	int b = 0;
-	// printf("%d\n", keycode);
-	// printf("%d    %d \n", (int)((beta->p_y*B+beta->shfit_y)/B), (int)((beta->p_x*B+beta->shfit_x)/B));
-	// printf("MAP : %d\n", worldMap[(int)((beta->p_y*B+beta->shfit_y)/B)][(int)((beta->p_x*B+beta->shfit_x)/B)]);
-	if (worldMap[(int)(((beta->p_y*B+beta->shfit_y - beta->pdy)/B))][(int)(((beta->p_x*B+beta->shfit_x - beta->pdx)/B))] != 1)
+	if (worldMap[(int)(((beta->p_y*B+beta->shfit_y - beta->pdy*10)/B))][(int)(((beta->p_x*B+beta->shfit_x - beta->pdx*10)/B))] != 1)
 	{
 
 		if (keycode == 126)
 		{
-			beta->shfit_y -= beta->pdy;
-			beta->shfit_x -= beta->pdx;
-
+			beta->shfit_y -= beta->pdy*5;
+			beta->shfit_x -= beta->pdx*5;
 		}
 	}
-	if (worldMap[(int)(((beta->p_y*B+beta->shfit_y + beta->pdy)/B))][(int)(((beta->p_x*B+beta->shfit_x + beta->pdx)/B))] != 1)
+	if (worldMap[(int)(((beta->p_y*B+beta->shfit_y + beta->pdy*10)/B))][(int)(((beta->p_x*B+beta->shfit_x + beta->pdx *10)/B))] != 1)
 	{
 		 if (keycode == 125)
 		{
-			beta->shfit_y += beta->pdy* 4;
-			beta->shfit_x += beta->pdx*4;
+			beta->shfit_y += beta->pdy* 5;
+			beta->shfit_x += beta->pdx*5;
 
 		}
 	}
@@ -546,7 +483,6 @@ int	key_hook(int keycode, t_beta *beta)
 		}
 
 		mlx_clear_window(beta->mlx, beta->win);
-		// bzero(beta->image.addr, mapWidth * mapHeight * 4);
 		randring(beta);
 		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
 	return(0);
@@ -568,6 +504,5 @@ int main()
 	mlx_put_image_to_window(beta.mlx, beta.win, beta.image.img, 0, 0);
 	mlx_key_hook(beta.win, key_hook, &beta);
 	mlx_hook(beta.win, 2, 0, key_hook, &beta);
-	// mlx_hook(vars.win, 17, 0, cross_window, &vars);
 	mlx_loop(beta.mlx);
 }
