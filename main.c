@@ -10,54 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mlx.h>
-#include <math.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "draw.h"
 
-#include <string.h>
-
-
-#define PI 3.14159265359
-#define mapWidth 24
-#define mapHeight 24
-#define screenHeight 560
-#define screenWidth 1360
-#define B 40
-
-typedef struct s_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_data;
-
-
-typedef struct s_beta{
-	t_data image;
-	void *mlx;
-	void *win;
-	int p_x;
-	int p_y;
-	int i;
-	int y;
-	float shfit_x;
-	float shfit_y;
-	float pdx;
-
-	float pos_px;
-	float pos_py;
-	float __des;
-	float intersect_x;
-	float intersect_y;
-
-	float rx;
-	float ry;
-
-	float pdy;
-	float _const;
-}		t_beta;
 
 int worldMap[mapWidth][mapHeight]=
 {
@@ -76,8 +30,6 @@ int worldMap[mapWidth][mapHeight]=
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
-
-
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -131,13 +83,15 @@ void drw_line(t_beta *beta)
 		float des_x;
 		float des_y;
 		float angle;
+	beta->wall_x = 0;
+
 	dy = 0;
 	dx = 0;
 
 
 		float new_des_x;
 		float new_des_y;
-	float save = beta->_const;
+	beta->save = beta->_const;
 	float _save = beta->pdx;
 	float __save = beta->pdy;
 	float __angle_start = beta->_const - 0.523598776;
@@ -157,7 +111,7 @@ void drw_line(t_beta *beta)
 		__j = 1;
 
 
-		 if (beta->_const <= save)
+		 if (beta->_const <= beta->save)
 		 {
 			beta->_const += 0.005;
 			if(beta->_const > 2 * PI)
@@ -285,9 +239,15 @@ void drw_line(t_beta *beta)
 
 		// float __x;
 		if (fabs(new_des_x) <= fabs(new_des_y))
+		{
 			beta->__des = fabs(new_des_x);
+			beta->color = 0x000fff;
+		}
 		else
+		{
 			beta->__des = fabs(new_des_y);
+			beta->color = 0xfff000;
+		}
 		beta->intersect_x = ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
 		beta->intersect_y = ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
 
@@ -314,15 +274,17 @@ void drw_line(t_beta *beta)
 				tmp_y += destance_y;
 				my_mlx_pixel_put(&beta->image, (tmp_x) , (tmp_y) , 0xE50000);
 
-
 				it++;
 			}
+			draw_wall(beta);
+			beta->wall_x += 3.25;
 			it = 1;
 	
 	}
-	beta->_const = save;
+	beta->_const = beta->save;
 	beta->pdy = __save;
 	beta->pdx = _save;
+	beta->wall_x += 0;
 }
 
 
@@ -483,8 +445,10 @@ int	key_hook(int keycode, t_beta *beta)
 		}
 
 		mlx_clear_window(beta->mlx, beta->win);
+		bzero(beta->image3D.addr, sizeof(int)*(screenWidth / 2) * screenHeight );
 		randring(beta);
 		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
+		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
 	return(0);
 }
 
@@ -499,9 +463,12 @@ int main()
 	beta.win = mlx_new_window(beta.mlx, screenWidth, screenHeight, "CUB3D");
 	beta.image.img = mlx_new_image(beta.mlx, screenWidth, screenHeight);
 	beta.image.addr = mlx_get_data_addr(beta.image.img, &beta.image.bits_per_pixel, &beta.image.line_length, &beta.image.endian);
+	beta.image3D.img = mlx_new_image(beta.mlx, screenWidth / 2, screenHeight);
+	beta.image3D.addr = mlx_get_data_addr(beta.image3D.img, &beta.image3D.bits_per_pixel, &beta.image3D.line_length, &beta.image3D.endian);
 
 	randring(&beta);
 	mlx_put_image_to_window(beta.mlx, beta.win, beta.image.img, 0, 0);
+	mlx_put_image_to_window(beta.mlx, beta.win, beta.image3D.img, screenWidth / 2, 0);
 	mlx_key_hook(beta.win, key_hook, &beta);
 	mlx_hook(beta.win, 2, 0, key_hook, &beta);
 	mlx_loop(beta.mlx);
