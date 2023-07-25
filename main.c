@@ -238,15 +238,27 @@ void drw_line(t_beta *beta)
 
 
 		// float __x;
+		if ((new_des_x-1) < (new_des_y))
+		{
+			beta->color = 0x616161;
+		}
+		else if ((new_des_x) > (new_des_y))
+		{
+			
+			beta->color = 0x9E9E9E; //sfaer
+		}
+
+
+
 		if (fabs(new_des_x) <= fabs(new_des_y))
 		{
 			beta->__des = fabs(new_des_x);
-			beta->color = 0x000fff;
+			// beta->color = 0x000fff;
 		}
 		else
 		{
 			beta->__des = fabs(new_des_y);
-			beta->color = 0xfff000;
+			// beta->color = 0xfff000;
 		}
 		beta->intersect_x = ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
 		beta->intersect_y = ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
@@ -287,7 +299,27 @@ void drw_line(t_beta *beta)
 	beta->wall_x += 0;
 }
 
-
+void backgrand(t_beta *beta)
+{
+	int x ;
+	int y = 0;
+	int color;
+	while(y < screenHeight-1)
+	{
+		x = screenWidth/2;
+		if (y < screenHeight/2)
+			color = 0x3881CA;
+		else
+			color = 0x275B2A;
+		while(x < screenWidth-1)
+		{
+			my_mlx_pixel_put(&beta->image3D, x, y, color);
+			x++;
+		}
+		y++;
+	}
+	return;
+}
 void randring(t_beta *beta)
 {
 	while(beta->y < 14)
@@ -446,6 +478,7 @@ int	key_hook(int keycode, t_beta *beta)
 
 		mlx_clear_window(beta->mlx, beta->win);
 		bzero(beta->image3D.addr, sizeof(int)*(screenWidth / 2) * screenHeight );
+		backgrand(beta);
 		randring(beta);
 		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
 		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
@@ -465,7 +498,7 @@ int main()
 	beta.image.addr = mlx_get_data_addr(beta.image.img, &beta.image.bits_per_pixel, &beta.image.line_length, &beta.image.endian);
 	beta.image3D.img = mlx_new_image(beta.mlx, screenWidth / 2, screenHeight);
 	beta.image3D.addr = mlx_get_data_addr(beta.image3D.img, &beta.image3D.bits_per_pixel, &beta.image3D.line_length, &beta.image3D.endian);
-
+	backgrand(&beta);
 	randring(&beta);
 	mlx_put_image_to_window(beta.mlx, beta.win, beta.image.img, 0, 0);
 	mlx_put_image_to_window(beta.mlx, beta.win, beta.image3D.img, screenWidth / 2, 0);
