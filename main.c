@@ -238,7 +238,7 @@ void drw_line(t_beta *beta)
 
 
 		// float __x;
-		if (fabs(new_des_x) <= fabs(new_des_y))
+		if (fabs(new_des_x) < fabs(new_des_y))
 		{
 			beta->__des = fabs(new_des_x);
 			beta->color = 0x000fff;
