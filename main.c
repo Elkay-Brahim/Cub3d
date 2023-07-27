@@ -12,24 +12,27 @@
 
 #include "draw.h"
 
+// the FOV = 698 ray
+// screenVue = 675 pixel
 
 int worldMap[mapWidth][mapHeight]=
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-  {1,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,1,1,1,1,5,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,1},
+  {1,0,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1},
+  {1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1},
+  {1,0,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1},
+  {1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1},
+  {1,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,1},
+  {1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
+  {1,0,1,0,0,0,1,1,1,1,5,0,0,1,0,0,1},
+  {1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1},
+  {1,0,1,0,1,1,1,1,1,0,0,0,0,1,0,0,1},
+  {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
+
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -120,7 +123,7 @@ void drw_line(t_beta *beta)
 
 		 if (beta->_const <= beta->save)
 		 {
-			beta->_const += 0.005;
+			beta->_const += 0.0015;
 			if(beta->_const > 2 * PI)
 				beta->_const -= 2 * PI;
 			beta->pdx = cos(beta->_const  ) ;
@@ -128,7 +131,7 @@ void drw_line(t_beta *beta)
 		 }
 		 else
 		 {
-			beta->_const += 0.005;
+			beta->_const += 0.0015;
 			if (beta->_const < 0)
 				beta->_const += 2 * PI;
 			beta->pdx = cos(beta->_const ) ;
@@ -249,7 +252,7 @@ void drw_line(t_beta *beta)
 			beta->color = 0x616161;
 			beta->inter_wall_side = WALL_SIDE_X;
 		}
-		else if ((new_des_x) > (new_des_y))
+		else 
 		{
 			beta->inter_wall_side = WALL_SIDE_Y;
 			beta->color = 0x9E9E9E; //sfaer
@@ -268,12 +271,20 @@ void drw_line(t_beta *beta)
 			beta->__des = fabs(new_des_y);
 			// beta->color = 0xfff000;
 		}
-		beta->intersect_x = ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
-		beta->intersect_y = ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
+		beta->intersect_x = ((beta->p_x*B+beta->shfit_x - beta->pdx * beta->__des ));
+		beta->intersect_y = ((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des));
+		// if ((beta->intersect_x / B) - ((int)(beta->intersect_x / B)) != 0)
+		// {
+
+		// 	beta->wall_x = (beta->intersect_x / B) - ((int)(beta->intersect_x / B));
+		// 	beta->wall_x = (beta->wall_x * B);
+		// 	printf("%f\n", beta->wall_x);
+
+		// }
 
 			float tmp_x, tmp_y;
-			float destance_x =  beta->pos_px - beta->intersect_x;
-			float destance_y =  beta->pos_py - beta->intersect_y;
+			float destance_x =  beta->pos_px - ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
+			float destance_y =  beta->pos_py - ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
 			float step = fmax(fabs(destance_x), fabs(destance_y));
 			destance_x = (destance_x) / step;
 			destance_y = (destance_y) / step;
@@ -297,18 +308,14 @@ void drw_line(t_beta *beta)
 				it++;
 			}
 
-			// draw_wall(beta);
-			if (((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des )/B ) - (int)((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des )/B ) == 0)
-				beta->wall_x = 0;
-			else
-				beta->wall_x += 3.25;
+			draw_wall(beta);
+			beta->wall_x += 0.97;
 			it = 1;
-			printf("------ %f  | %d   %d\n", beta->wall_x , (int)((beta->p_x*B+beta->shfit_x - beta->pdx * beta->__des )/B ), (int)((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des )/B ));
 	}
 	beta->_const = beta->save;
 	beta->pdy = __save;
 	beta->pdx = _save;
-	// beta->wall_x = 0;
+	beta->wall_x = 0;
 }
 
 void backgrand(t_beta *beta)
@@ -496,8 +503,33 @@ int	key_hook(int keycode, t_beta *beta)
 		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
 	return(0);
 }
+void parse_map(char *str)
+{
+	int		i;
+	char	*map;
+	char	*read;
+	int		fd;
 
-int main()
+	map = calloc(1,1);
+	i = strlen(str);
+	if (i <= 4)
+	{
+		printf("Error\n");
+		exit(1);
+	}
+	char *new = str+(i-4);
+	if (strcmp(new, ".cub") != 0)
+	{
+		printf("Error");
+		exit(1);
+	}
+	// while(read != NULL)
+	// {
+	// 	get_next_line(fd);
+	// }
+	
+}
+int main(int ac, char **av)
 {
 	t_beta beta;
 	beta._const = 30 * 0.0174532925;
@@ -510,9 +542,10 @@ int main()
 	beta.image.addr = mlx_get_data_addr(beta.image.img, &beta.image.bits_per_pixel, &beta.image.line_length, &beta.image.endian);
 	beta.image3D.img = mlx_new_image(beta.mlx, screenWidth / 2, screenHeight);
 	beta.image3D.addr = mlx_get_data_addr(beta.image3D.img, &beta.image3D.bits_per_pixel, &beta.image3D.line_length, &beta.image3D.endian);
+	parse_map(av[1]);
 
 	// textur;
-    beta.textur.img = mlx_xpm_file_to_image(beta.mlx, "test.xpm", &beta.textur_width, &beta.textur_height);
+    beta.textur.img = mlx_xpm_file_to_image(beta.mlx, "shado.xpm", &beta.textur_width, &beta.textur_height);
 	beta.textur.addr = mlx_get_data_addr(beta.textur.img, &beta.textur.bits_per_pixel, &beta.textur.line_length, &beta.textur.endian);
 
 	// int map_color[beta.textur_height][beta.textur_width];
