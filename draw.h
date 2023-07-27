@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:48 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/25 15:01:15 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/07/25 18:29:48 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <unistd.h>
-
+#include <stdlib.h>
 #include <string.h>
 
 

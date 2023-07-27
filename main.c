@@ -242,7 +242,7 @@ void drw_line(t_beta *beta)
 		{
 			beta->color = 0x616161;
 		}
-		else if ((new_des_x) > (new_des_y))
+		else 
 		{
 			
 			beta->color = 0x9E9E9E; //sfaer
@@ -484,8 +484,33 @@ int	key_hook(int keycode, t_beta *beta)
 		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
 	return(0);
 }
+void parse_map(char *str)
+{
+	int		i;
+	char	*map;
+	char	*read;
+	int		fd;
 
-int main()
+	map = calloc(1,1);
+	i = strlen(str);
+	if (i <= 4)
+	{
+		printf("Error\n");
+		exit(1);
+	}
+	char *new = str+(i-4);
+	if (strcmp(new, ".cub") != 0)
+	{
+		printf("Error");
+		exit(1);
+	}
+	while(read != NULL);
+	{
+		get_next_line(fd)
+	}
+	
+}
+int main(int ac, char **av)
 {
 	t_beta beta;
 	beta._const = 30 * 0.0174532925;
@@ -498,6 +523,7 @@ int main()
 	beta.image.addr = mlx_get_data_addr(beta.image.img, &beta.image.bits_per_pixel, &beta.image.line_length, &beta.image.endian);
 	beta.image3D.img = mlx_new_image(beta.mlx, screenWidth / 2, screenHeight);
 	beta.image3D.addr = mlx_get_data_addr(beta.image3D.img, &beta.image3D.bits_per_pixel, &beta.image3D.line_length, &beta.image3D.endian);
+	parse_map(av[1]);
 	backgrand(&beta);
 	randring(&beta);
 	mlx_put_image_to_window(beta.mlx, beta.win, beta.image.img, 0, 0);
