@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:48 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/25 15:01:15 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/07/26 18:20:47 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <unistd.h>
-
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -28,6 +28,9 @@
 #define screenHeight 560
 #define screenWidth 1360
 #define B 40
+
+#define WALL_SIDE_X 1
+#define WALL_SIDE_Y 2
 
 typedef struct s_data {
 	void	*img;
@@ -50,6 +53,11 @@ typedef struct s_beta{
 	float shfit_y;
 	float pdx;
 
+	int	  inter_wall_side;
+	int **map_color;
+	t_data textur;
+	int	textur_width;
+	int textur_height;
 	float pos_px;
 	float pos_py;
 	float __des;
