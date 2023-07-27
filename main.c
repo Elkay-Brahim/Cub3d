@@ -243,7 +243,6 @@ void drw_line(t_beta *beta)
 		}
 
 
-
 		// float __x;
 		if ((new_des_x-1) < (new_des_y))
 		{
@@ -255,6 +254,7 @@ void drw_line(t_beta *beta)
 			beta->inter_wall_side = WALL_SIDE_Y;
 			beta->color = 0x9E9E9E; //sfaer
 		}
+
 
 
 
@@ -297,15 +297,18 @@ void drw_line(t_beta *beta)
 				it++;
 			}
 
-			draw_wall(beta);
-			beta->wall_x += 3.25;
+			// draw_wall(beta);
+			if (((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des )/B ) - (int)((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des )/B ) == 0)
+				beta->wall_x = 0;
+			else
+				beta->wall_x += 3.25;
 			it = 1;
-	
+			printf("------ %f  | %d   %d\n", beta->wall_x , (int)((beta->p_x*B+beta->shfit_x - beta->pdx * beta->__des )/B ), (int)((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des )/B ));
 	}
 	beta->_const = beta->save;
 	beta->pdy = __save;
 	beta->pdx = _save;
-	beta->wall_x = 0;
+	// beta->wall_x = 0;
 }
 
 void backgrand(t_beta *beta)
