@@ -39,6 +39,13 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
+int	get_color(t_data *data, int x, int y)
+{
+	char	*dst;
+
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	return(*(unsigned int *)dst);
+}
 
 
 static void	line_d(t_data mlx, int y, int x , int x1, int y1)
@@ -113,7 +120,7 @@ void drw_line(t_beta *beta)
 
 		 if (beta->_const <= beta->save)
 		 {
-			beta->_const += 0.005;
+			beta->_const += 0.003;
 			if(beta->_const > 2 * PI)
 				beta->_const -= 2 * PI;
 			beta->pdx = cos(beta->_const  ) ;
@@ -121,7 +128,7 @@ void drw_line(t_beta *beta)
 		 }
 		 else
 		 {
-			beta->_const += 0.005;
+			beta->_const += 0.003;
 			if (beta->_const < 0)
 				beta->_const += 2 * PI;
 			beta->pdx = cos(beta->_const ) ;
@@ -241,10 +248,11 @@ void drw_line(t_beta *beta)
 		if ((new_des_x-1) < (new_des_y))
 		{
 			beta->color = 0x616161;
+			beta->inter_wall_side = WALL_SIDE_X;
 		}
 		else 
 		{
-			
+			beta->inter_wall_side = WALL_SIDE_Y;
 			beta->color = 0x9E9E9E; //sfaer
 		}
 
@@ -260,12 +268,20 @@ void drw_line(t_beta *beta)
 			beta->__des = fabs(new_des_y);
 			// beta->color = 0xfff000;
 		}
-		beta->intersect_x = ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
-		beta->intersect_y = ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
+		beta->intersect_x = ((beta->p_x*B+beta->shfit_x - beta->pdx * beta->__des ));
+		beta->intersect_y = ((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des));
+		// if ((beta->intersect_x / B) - ((int)(beta->intersect_x / B)) != 0)
+		// {
+
+		// 	beta->wall_x = (beta->intersect_x / B) - ((int)(beta->intersect_x / B));
+		// 	beta->wall_x = (beta->wall_x * B);
+		// 	printf("%f\n", beta->wall_x);
+
+		// }
 
 			float tmp_x, tmp_y;
-			float destance_x =  beta->pos_px - beta->intersect_x;
-			float destance_y =  beta->pos_py - beta->intersect_y;
+			float destance_x =  beta->pos_px - ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
+			float destance_y =  beta->pos_py - ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
 			float step = fmax(fabs(destance_x), fabs(destance_y));
 			destance_x = (destance_x) / step;
 			destance_y = (destance_y) / step;
@@ -288,15 +304,16 @@ void drw_line(t_beta *beta)
 
 				it++;
 			}
+
 			draw_wall(beta);
-			beta->wall_x += 3.25;
+			beta->wall_x += 2;
 			it = 1;
 	
 	}
 	beta->_const = beta->save;
 	beta->pdy = __save;
 	beta->pdx = _save;
-	beta->wall_x += 0;
+	beta->wall_x = 0;
 }
 
 void backgrand(t_beta *beta)
@@ -504,10 +521,10 @@ void parse_map(char *str)
 		printf("Error");
 		exit(1);
 	}
-	while(read != NULL);
-	{
-		get_next_line(fd)
-	}
+	// while(read != NULL)
+	// {
+	// 	get_next_line(fd);
+	// }
 	
 }
 int main(int ac, char **av)
@@ -524,6 +541,26 @@ int main(int ac, char **av)
 	beta.image3D.img = mlx_new_image(beta.mlx, screenWidth / 2, screenHeight);
 	beta.image3D.addr = mlx_get_data_addr(beta.image3D.img, &beta.image3D.bits_per_pixel, &beta.image3D.line_length, &beta.image3D.endian);
 	parse_map(av[1]);
+
+	// textur;
+    beta.textur.img = mlx_xpm_file_to_image(beta.mlx, "wall.xpm", &beta.textur_width, &beta.textur_height);
+	beta.textur.addr = mlx_get_data_addr(beta.textur.img, &beta.textur.bits_per_pixel, &beta.textur.line_length, &beta.textur.endian);
+
+	// int map_color[beta.textur_height][beta.textur_width];
+	beta.map_color = calloc(beta.textur_height+1, sizeof(int*));
+	int i = 0;
+	int j = 0;
+	while (j < beta.textur_height)
+	{
+		beta.map_color[j] = calloc(beta.textur_width+1, sizeof(int));
+		while (i < beta.textur_width)
+		{
+			beta.map_color[j][i] = get_color(&beta.textur, i, j);
+			i++;
+		}
+		i = 0;
+		j++;
+	}
 	backgrand(&beta);
 	randring(&beta);
 	mlx_put_image_to_window(beta.mlx, beta.win, beta.image.img, 0, 0);

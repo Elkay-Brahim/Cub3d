@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:48 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/25 18:29:48 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/07/27 13:15:34 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@
 #define screenWidth 1360
 #define B 40
 
+#define WALL_SIDE_X 1
+#define WALL_SIDE_Y 2
+
 typedef struct s_data {
 	void	*img;
 	char	*addr;
@@ -50,6 +53,11 @@ typedef struct s_beta{
 	float shfit_y;
 	float pdx;
 
+	int	  inter_wall_side;
+	int **map_color;
+	t_data textur;
+	int	textur_width;
+	int textur_height;
 	float pos_px;
 	float pos_py;
 	float __des;
