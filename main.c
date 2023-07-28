@@ -462,6 +462,7 @@ int	key_hook(int keycode, t_beta *beta)
 
 		if (keycode == 126)
 		{
+
 			beta->shfit_y -= beta->pdy*5;
 			beta->shfit_x -= beta->pdx*5;
 		}
@@ -527,9 +528,27 @@ void parse_map(char *str)
 	// }
 	
 }
+
+// int loop_hook(t_beta *pack)
+// {
+// 	static int frames = 0;
+
+// 	frames++;
+// 	if (frames < 120)
+// 		return (0);
+// 	frames = 0;
+// 	if (pack->up_keydown)
+// 		printf("will move up\n");
+// 	if (pack->left_keydown)
+// 		printf("will move left\n");
+// 	return (0);
+// }
+
 int main(int ac, char **av)
 {
 	t_beta beta;
+
+	bzero(&beta, sizeof(t_beta));
 	beta._const = 30 * 0.0174532925;
 	beta.pdx = cos(beta._const);
 	beta.pdy = sin(beta._const);

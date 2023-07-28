@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/27 15:35:10 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/07/27 18:54:30 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void    draw_____line(t_beta *beta, t_cord p1, t_cord p2, int st)
         // text_x =((beta->textur_width * line.new_x)/ line.max);
         // text_x = ( 1.0 - p1.x / line.max) * beta->textur_width;
     if (beta->inter_wall_side == WALL_SIDE_Y)
-        text_x = (beta->textur_width / B ) * beta->intersect_x - ((int)(beta->intersect_x / B ) * B);
+        text_x = (beta->textur_width / B ) * (beta->intersect_x - (int)(beta->intersect_x / B ) * B);
     else
-        text_x = (beta->textur_width / B ) * beta->intersect_y - ((int)(beta->intersect_y / B ) * B);
+        text_x = (beta->textur_width / B ) * (beta->intersect_y - (int)(beta->intersect_y / B ) * B);
         
     
 
