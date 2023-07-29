@@ -12,24 +12,27 @@
 
 #include "draw.h"
 
+// the FOV = 698 ray
+// screenVue = 675 pixel
 
 int worldMap[mapWidth][mapHeight]=
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-  {1,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,1,1,1,1,5,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,1},
+  {1,0,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1},
+  {1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1},
+  {1,0,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1},
+  {1,0,1,0,0,2,0,3,0,0,1,0,0,0,0,0,1},
+  {1,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,1},
+  {1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
+  {1,0,1,0,0,0,1,1,1,1,5,0,0,1,0,0,1},
+  {1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1},
+  {1,0,1,0,1,1,1,1,1,0,0,0,0,1,0,0,1},
+  {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
+
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -90,6 +93,9 @@ void drw_line(t_beta *beta)
 		float des_x;
 		float des_y;
 		float angle;
+		int ver = 1;
+		int ver1 = 1;
+		float cat = 0;
 	beta->wall_x = 0;
 
 	dy = 0;
@@ -98,6 +104,9 @@ void drw_line(t_beta *beta)
 
 		float new_des_x;
 		float new_des_y;
+		float sprits_x = 0;
+		float sprits_y = 0;
+		float sp_y;
 	beta->save = beta->_const;
 	float _save = beta->pdx;
 	float __save = beta->pdy;
@@ -112,15 +121,14 @@ void drw_line(t_beta *beta)
 		__angle_end = beta->_const + 6.28318531 + 0.523598776;
 	}
 	beta->_const = __angle_start;
-
+	beta->sprits = -1;
 	while (beta->_const <= __angle_end)
 	{
 		__j = 1;
 
-
 		 if (beta->_const <= beta->save)
 		 {
-			beta->_const += 0.003;
+			beta->_const += 0.0015;
 			if(beta->_const > 2 * PI)
 				beta->_const -= 2 * PI;
 			beta->pdx = cos(beta->_const  ) ;
@@ -128,7 +136,7 @@ void drw_line(t_beta *beta)
 		 }
 		 else
 		 {
-			beta->_const += 0.003;
+			beta->_const += 0.0015;
 			if (beta->_const < 0)
 				beta->_const += 2 * PI;
 			beta->pdx = cos(beta->_const ) ;
@@ -156,34 +164,45 @@ void drw_line(t_beta *beta)
 
 				angle_A = beta->_const;
 
-			if ((int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B) <= 0 || (int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B) > 13)
+			if (((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B) <= 0 || ((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B) > 13)
 				break;
-			if ((int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B) <= 0 || (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B) > 16)
+			if (((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B) <= 0 || ((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B) > 16)
 				break;
 
 			
-			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1)
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1)
 				break;
-			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 0 )
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 2 )
+			{
+				// if(fabs((((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)) - (((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B))) < 0.9 )
+				new_des_x = new_des_x + 20;
+					break;
+			}
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 3  && ver1 == 1 )
+			{
+				ver1 = 0;
+				sprits_x = new_des_x;
+			}
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 0 )
 			{
 				if (((beta->_const * 180)/PI  > 0 && (beta->_const * 180)/PI  < 90 )|| (beta->_const * 180)/PI  > 360)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)+1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)+1] == 1)
 						break;
 				}
 				else if ((beta->_const * 180)/PI  > 90 && (beta->_const * 180)/PI  < 180)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)-1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)-1] == 1)
 						break;
 				}
 				else if ((beta->_const * 180)/PI  > 180 && (beta->_const * 180)/PI  < 270)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)-1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)-1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)-1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)-1] == 1)
 						break;
 				}
 				else if ((beta->_const * 180)/PI  > 270 && (beta->_const * 180)/PI  < 360)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)+1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)+1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_x)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_x)/B)+1] == 1)
 						break;
 				}
 			}
@@ -192,6 +211,7 @@ void drw_line(t_beta *beta)
 			__j++;
 		}
 		__j=1;
+		cat = 0;
 		while(1)
 		{
 
@@ -207,33 +227,45 @@ void drw_line(t_beta *beta)
 				new_des_y = (dy / sin(beta->_const)) + 1;
 			}
 			
-			if ((int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B) <= 0 || (int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B) > 13)
+			if (((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B) <= 0 || ((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B) > 13)
 				break;
-			if ((int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) <= 0 || (int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) > 16)
+			if (((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) <= 0 || ((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B) > 16)
 				break;
 
-			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1 )
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1 )
 				break;
-			if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 0 )
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 2 )
+			{
+				// if(fabs((((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)) - (((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B))) < 1 )
+					new_des_y = new_des_y + 20;
+					break;
+			}
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 3  && ver == 1)
+			{
+				ver = 0;
+				sprits_y = new_des_y;
+			}
+				// break;
+			if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 0 )
 			{
 				if ((beta->_const * 180)/PI  > 0 && (beta->_const * 180)/PI  < 90)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)+1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)+1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)+1] == 1)
 						break;
 				}
 				else if ((beta->_const * 180)/PI  > 90 && (beta->_const * 180)/PI  < 180)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)+1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)-1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)+1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)-1] == 1)
 						break;
 				}
 				else if ((beta->_const * 180)/PI  > 180 && (beta->_const * 180)/PI  < 270)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)-1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)-1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)-1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)-1] == 1)
 						break;
 				}
 				else if ((beta->_const * 180)/PI  > 270 && (beta->_const * 180)/PI  < 360)
 				{
-					if ( worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)-1][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[(int)((beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][(int)((beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)+1] == 1)
+					if ( worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)-1][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)] == 1  && worldMap[((int)(beta->p_y*B+beta->shfit_y - beta->pdy * new_des_y)/B)][((int)(beta->p_x*B+beta->shfit_x - beta->pdx * new_des_y)/B)+1] == 1)
 						break;
 				}
 			}
@@ -241,7 +273,6 @@ void drw_line(t_beta *beta)
 			__j++;
 
 		}
-
 
 
 		// float __x;
@@ -258,6 +289,21 @@ void drw_line(t_beta *beta)
 
 
 
+
+		if ((sprits_x) > (sprits_y))
+		{
+			// beta->color = 0x616161;
+			beta->inter_wall_side1 = WALL_SIDE_X;
+		}
+		else 
+		{
+			beta->inter_wall_side1 = WALL_SIDE_Y;
+			// beta->color = 0x9E9E9E; //sfaer
+		}
+
+
+
+
 		if (fabs(new_des_x) <= fabs(new_des_y))
 		{
 			beta->__des = fabs(new_des_x);
@@ -268,6 +314,39 @@ void drw_line(t_beta *beta)
 			beta->__des = fabs(new_des_y);
 			// beta->color = 0xfff000;
 		}
+		if (ver == 0 || ver1 == 0)
+		{
+			if (ver == 0 && ver1 == 0)
+			{
+				if (fabs(sprits_x) <= fabs(sprits_y))
+				{
+					beta->sprits = fabs(sprits_x);
+					// beta->color = 0x000fff;
+				}
+				else
+				{
+					beta->sprits = fabs(sprits_y);
+					// beta->color = 0xfff000;
+				}
+			}
+			else if (ver == 0)
+			{
+				beta->sprits = fabs(sprits_y);
+				beta->inter_wall_side1 = WALL_SIDE_Y;
+			}
+			else
+			{
+				beta->inter_wall_side1 = WALL_SIDE_X;
+				beta->sprits = fabs(sprits_x);
+			}
+
+		}
+		else
+			beta->sprits = -1;
+		ver =1;
+		ver1 = 1;
+		beta->sprits_x_inter = ((beta->p_x*B+beta->shfit_x - beta->pdx * beta->sprits));
+		beta->sprits_y_inter = ((beta->p_y*B+beta->shfit_y - beta->pdy * beta->sprits));
 		beta->intersect_x = ((beta->p_x*B+beta->shfit_x - beta->pdx * beta->__des ));
 		beta->intersect_y = ((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des));
 		// if ((beta->intersect_x / B) - ((int)(beta->intersect_x / B)) != 0)
@@ -304,15 +383,14 @@ void drw_line(t_beta *beta)
 
 				it++;
 			}
-
 			draw_wall(beta);
-			beta->wall_x += 2;
+			beta->wall_x += 0.97;
 			it = 1;
-	
 	}
 	beta->_const = beta->save;
 	beta->pdy = __save;
 	beta->pdx = _save;
+	printf("********** %f\n", beta->wall_x);
 	beta->wall_x = 0;
 }
 
@@ -359,8 +437,15 @@ void randring(t_beta *beta)
 				tmp_y1 = beta->y*B;
 				while(it1 <= step1)
 				{
-					if(worldMap[beta->y][beta->i] == 1)
-						my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0x00a86b);
+					if(worldMap[beta->y][beta->i] == 1 || worldMap[beta->y][beta->i] == 2 || worldMap[beta->y][beta->i] == 3)
+					{
+						if (worldMap[beta->y][beta->i] == 1)
+							my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0x00a86b);
+						else if (worldMap[beta->y][beta->i] == 3)
+							my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0x0000ff);
+						else
+							my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0xfff000);
+					}
 					else
 						my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0xe3e1e6);
 					tmp_x1 += destance_x1;
@@ -379,8 +464,15 @@ void randring(t_beta *beta)
 				tmp_y = beta->y*B;
 				while(it <= step)
 				{
-					if(worldMap[beta->y][beta->i] == 1)
-						my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0x00a86b);
+					if(worldMap[beta->y][beta->i] == 1 || worldMap[beta->y][beta->i] == 2|| worldMap[beta->y][beta->i] == 3)
+					{
+						if (worldMap[beta->y][beta->i] == 1)
+							my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0x00a86b);
+						else if (worldMap[beta->y][beta->i] == 3)
+							my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0x0000ff);
+						else
+							my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0xfff000);
+					}
 					else
 						my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0xe3e1e6);
 					tmp_x += destance_x;
@@ -389,50 +481,11 @@ void randring(t_beta *beta)
 				}
 				x++;
 			}
-
-
-
-				float tmp_x1, tmp_y1;
-				float destance_x1 = (float) (beta->i*B - (beta->i)*B);
-				float destance_y1 = (float) (beta->y*B - (beta->y+1)*B);
-				float step1 = fmax(fabs(destance_x1), fabs(destance_y1));
-				destance_x1 = fabs(destance_x1) / step1;
-				destance_y1 = fabs(destance_y1) / step1;
-				int it1 = 1;
-				tmp_x1 = beta->i*B;
-				tmp_y1 = beta->y*B;
-				while(it1 <= step1)
-				{
-					my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0x000000);
-					tmp_x1 += destance_x1;
-					tmp_y1 += destance_y1;
-					it1++;
-				}
-
-				float tmp_x, tmp_y;
-				float destance_x = (float) (beta->i*B - (beta->i+1)*B);
-				float destance_y = (float) (beta->y*B - (beta->y)*B);
-				float step = fmax(fabs(destance_x), fabs(destance_y));
-				destance_x = fabs(destance_x) / step;
-				destance_y = fabs(destance_y) / step;
-				int it = 1;
-				tmp_x = beta->i*B;
-				tmp_y = beta->y*B;
-				while(it <= step)
-				{
-					my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0x000000);
-
-					tmp_x += destance_x;
-					tmp_y += destance_y;
-					it++;
-				}
-
-
-				if (worldMap[beta->y][beta->i] == 5)
-				{
-					beta->p_x = beta->i;
-					beta->p_y = beta->y;
-				}
+			if (worldMap[beta->y][beta->i] == 5)
+			{
+				beta->p_x = beta->i;
+				beta->p_y = beta->y;
+			}
 			beta->i++;
 		}
 		beta->y++;
@@ -507,6 +560,7 @@ void parse_map(char *str)
 	int		i;
 	char	*map;
 	char	*read;
+	char 	**new1;
 	int		fd;
 
 	map = calloc(1,1);
@@ -522,10 +576,22 @@ void parse_map(char *str)
 		printf("Error");
 		exit(1);
 	}
-	// while(read != NULL)
+	// while(1)
 	// {
-	// 	get_next_line(fd);
+	// 	read =  get_next_line(fd);
+	// 	if (read == NULL)
+	// 		break
+	// 	if (read[0] == '\n')
+	// 	{
+	// 		printf("Error\n");
+	// 		exit(1);
+	// 	}
+	// 	map = ft_strjoin(map, read);
 	// }
+	// new = ft_split(map, '\n');
+	// free(map);
+
+
 	
 }
 
@@ -562,7 +628,7 @@ int main(int ac, char **av)
 	parse_map(av[1]);
 
 	// textur;
-    beta.textur.img = mlx_xpm_file_to_image(beta.mlx, "wall.xpm", &beta.textur_width, &beta.textur_height);
+    beta.textur.img = mlx_xpm_file_to_image(beta.mlx, "shado.xpm", &beta.textur_width, &beta.textur_height);
 	beta.textur.addr = mlx_get_data_addr(beta.textur.img, &beta.textur.bits_per_pixel, &beta.textur.line_length, &beta.textur.endian);
 
 	// int map_color[beta.textur_height][beta.textur_width];
