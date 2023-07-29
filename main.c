@@ -23,7 +23,7 @@ int worldMap[mapWidth][mapHeight]=
   {1,0,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1},
   {1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1},
   {1,0,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1},
-  {1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1},
+  {1,0,1,0,0,2,0,0,0,0,1,0,0,0,0,0,1},
   {1,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,1},
   {1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
   {1,0,1,0,0,0,1,1,1,1,5,0,0,1,0,0,1},
@@ -191,7 +191,7 @@ void drw_line(t_beta *beta)
 				}
 			}
 
-
+ 
 			__j++;
 		}
 		__j=1;
@@ -363,6 +363,8 @@ void randring(t_beta *beta)
 				{
 					if(worldMap[beta->y][beta->i] == 1)
 						my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0x00a86b);
+					else if (worldMap[beta->y][beta->i] == 2)
+						my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0x00ff00);
 					else
 						my_mlx_pixel_put(&beta->image, tmp_x1 , tmp_y1 , 0xe3e1e6);
 					tmp_x1 += destance_x1;
@@ -383,6 +385,8 @@ void randring(t_beta *beta)
 				{
 					if(worldMap[beta->y][beta->i] == 1)
 						my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0x00a86b);
+					else if (worldMap[beta->y][beta->i] == 2)
+						my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0x00ff00);
 					else
 						my_mlx_pixel_put(&beta->image, tmp_x , tmp_y , 0xe3e1e6);
 					tmp_x += destance_x;
@@ -529,6 +533,34 @@ void parse_map(char *str)
 	// }
 	
 }
+
+t_map_textur *read_textur_map(void *mlx, char *textur_path)
+{
+	t_map_textur	*map;
+	t_data			data;
+	int				i;
+	int				j;
+
+	j = 0;
+	map = calloc(sizeof(t_map_textur), 1);
+	data.img = mlx_xpm_file_to_image(mlx, textur_path, &map->whidth, &map->height);
+	data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
+	map->map = calloc(sizeof(int *), map->height);
+	while (j < map->height)
+	{
+		i = 0;
+		map->map[j] = calloc(sizeof(int), map->whidth);
+		while (i < map->whidth)
+		{
+			map->map[j][i] = get_color(&data, i, j);
+			i++;
+		}
+		j++;
+	}
+	mlx_destroy_image(mlx, data.img);
+	return (map);
+}
+
 int main(int ac, char **av)
 {
 	t_beta beta;
@@ -544,25 +576,11 @@ int main(int ac, char **av)
 	beta.image3D.addr = mlx_get_data_addr(beta.image3D.img, &beta.image3D.bits_per_pixel, &beta.image3D.line_length, &beta.image3D.endian);
 	parse_map(av[1]);
 
-	// textur;
-    beta.textur.img = mlx_xpm_file_to_image(beta.mlx, "shado.xpm", &beta.textur_width, &beta.textur_height);
-	beta.textur.addr = mlx_get_data_addr(beta.textur.img, &beta.textur.bits_per_pixel, &beta.textur.line_length, &beta.textur.endian);
+	// textur :
+	beta.txr_x = read_textur_map(beta.mlx, "shado.xpm");
+	beta.txr_y = read_textur_map(beta.mlx, "med.xpm");
+	beta.door = read_textur_map(beta.mlx, "door.xpm");
 
-	// int map_color[beta.textur_height][beta.textur_width];
-	beta.map_color = calloc(beta.textur_height+1, sizeof(int*));
-	int i = 0;
-	int j = 0;
-	while (j < beta.textur_height)
-	{
-		beta.map_color[j] = calloc(beta.textur_width+1, sizeof(int));
-		while (i < beta.textur_width)
-		{
-			beta.map_color[j][i] = get_color(&beta.textur, i, j);
-			i++;
-		}
-		i = 0;
-		j++;
-	}
 	backgrand(&beta);
 	randring(&beta);
 	mlx_put_image_to_window(beta.mlx, beta.win, beta.image.img, 0, 0);

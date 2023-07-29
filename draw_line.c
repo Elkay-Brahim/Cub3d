@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/27 19:50:43 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/07/28 11:37:36 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_dda
 void    draw_____line(t_beta *beta, t_cord p1, t_cord p2)
 {
     t_dda   line;
+	t_map_textur *txr;
     int i;
     i = 1;
     line.dx = p1.x - p2.x;
@@ -46,14 +47,20 @@ void    draw_____line(t_beta *beta, t_cord p1, t_cord p2)
     int text_y = 0;
 
     if (beta->inter_wall_side == WALL_SIDE_Y)
-        text_x = (beta->textur_width / B ) * (beta->intersect_x - ((int)(beta->intersect_x / B ) * B));
+    {
+        txr = beta->txr_y;
+        text_x = (txr->whidth / B ) * (beta->intersect_x - ((int)(beta->intersect_x / B ) * B));
+    }
     else
-        text_x = (beta->textur_width / B ) * (beta->intersect_y - ((int)(beta->intersect_y / B ) * B));
+    {
+        txr = beta->txr_x;
+        text_x = (txr->whidth / B ) * (beta->intersect_y - ((int)(beta->intersect_y / B ) * B));
+    }
     while (i < line.max)
     {
-        text_y = fabs((beta->textur_height - 1) - ((beta->textur_height*(fabs(p2.y - line.new_y))) /line.max));
+        text_y = fabs((txr->height - 1) - ((txr->height*(fabs(p2.y - line.new_y))) /line.max));
         if (line.new_y >= 0 && line.new_y < screenHeight && line.new_x < screenWidth / 2)
-            my_mlx_pixel_put(&beta->image3D, line.new_x, line.new_y, beta->map_color[text_y][text_x]);
+            my_mlx_pixel_put(&beta->image3D, line.new_x, line.new_y, txr->map[text_y][text_x]);
         // printf ("text_y :%d, text_x: %d color: %d\n", text_y,text_x, beta->map_color[text_y][text_x]);
         line.new_x += line.step_x;
         line.new_y += line.step_y;
