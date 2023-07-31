@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:48 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/28 12:10:37 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/07/29 17:16:11 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_beta{
 	t_map_textur *txr_y;
 	t_map_textur *door;
 	int	  inter_wall_side;
+	int	  inter_wall_side1;
 	int **map_color;
 	t_data textur;
 	int	textur_width;
@@ -77,6 +78,14 @@ typedef struct s_beta{
 	t_data image3D;
     float save;
 	int		color;
+	
+	// intersaction sprits
+	float sprits_x_inter;
+	float sprits_y_inter;
+	float sprits;
+	
+
+	
 
 	float rx;
 	float ry;

@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/28 11:37:36 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/07/30 11:29:42 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,47 @@ void    draw_____line(t_beta *beta, t_cord p1, t_cord p2)
     return ;
 }
 
+void    draw_sp(t_beta *beta, t_cord p1, t_cord p2)
+{
+    t_dda   line;
+    int i;
+    i = 1;
+    line.dx = p1.x - p2.x;
+    line.dy = p1.y - p2.y;
+    line.max = fmax(fabs(line.dx), fabs(line.dy));
+    line.step_x = fabs(line.dx) / line.max;
+    line.step_y = fabs(line.dy) / line.max;
+    line.new_x = p1.x;
+    line.new_y = p1.y;
+    int text_x;
+    int text_y = 0;
+
+    if (beta->inter_wall_side1 == WALL_SIDE_Y)
+        text_x = (beta->textur_width / B ) * (beta->sprits_x_inter - ((int)(beta->sprits_x_inter / B ) * B));
+    else
+        text_x = (beta->textur_width / B ) * (beta->sprits_y_inter - ((int)(beta->sprits_y_inter / B ) * B));
+    while (i < line.max)
+    {
+        text_y = fabs((beta->textur_height - 1) - ((beta->textur_height*(fabs(p2.y - line.new_y))) /line.max));
+        if (line.new_y >= 0 && line.new_y < screenHeight && line.new_x < screenWidth / 2)
+            my_mlx_pixel_put(&beta->image3D, line.new_x, line.new_y, 0x000000);
+        // printf ("text_y :%d, text_x: %d color: %d\n", text_y,text_x, beta->map_color[text_y][text_x]);
+        line.new_x += line.step_x;
+        line.new_y += line.step_y;
+        i++;
+        // text_y++;
+    }
+    return ;
+}
+
 void    draw_wall(t_beta *beta)
 {
     t_cord p1;
     t_cord p2;
+
+    t_cord sp1;
+    t_cord sp2;
+    float s = beta->sprits;
     float middel;
     int i = 0;
     float ca;
@@ -84,16 +121,28 @@ void    draw_wall(t_beta *beta)
     if (ca > 2*PI)
         ca -= 2*PI;
     beta->__des = beta->__des * cos(ca);
-    
     p1.x = beta->wall_x;
-    p1.y = 0;
-    
     p2.x = beta->wall_x;
+
+    // if (beta->wall_x < 340)
+    //     sp1.x = beta->wall_x + 170;
+    // else if (beta->wall_x > 340)
+    //     sp1.x = beta->wall_x - 170;
     
     p2.y = ((B * WALL) / beta->__des);
+
     middel = p2.y / 2;
     p1.y = (screenHeight / 2) - middel;
     p2.y = screenHeight / 2 + middel;
+    // p2.y = 0;
+    s = s * cos(ca);
+    sp1.x =  beta->wall_x;
+    sp2.x = sp1.x; 
+    sp2.y = (((B) * (WALL / 3)) / s);
+    middel = sp2.y / 6;
+    sp1.y = (screenHeight / 2) - middel;
+    sp2.y = screenHeight / 2 + middel * 5;
+    
     int const_1 = p1.x + 2;
 
     p1.color = beta->color;
@@ -102,8 +151,16 @@ void    draw_wall(t_beta *beta)
     {
         p2.color = i;
         draw_____line(beta, p1, p2);
+        // printf("**********\n");
+        if (beta->sprits != -1 && beta->sprits < beta->__des  )
+        {
+            draw_sp(beta, sp1, sp2);
+            // printf()
+        }
         p1.x++;
         p2.x++;
+        sp1.x++;
+        sp2.x++;
         i++;
 
     }
