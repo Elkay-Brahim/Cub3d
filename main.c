@@ -106,7 +106,7 @@ void drw_line(t_beta *beta)
 		float new_des_y;
 		float sprits_x = 0;
 		float sprits_y = 0;
-		float sp_y;
+		float sp_y; 
 	beta->save = beta->_const;
 	float _save = beta->pdx;
 	float __save = beta->pdy;
@@ -131,8 +131,8 @@ void drw_line(t_beta *beta)
 			beta->_const += 0.0015;
 			if(beta->_const > 2 * PI)
 				beta->_const -= 2 * PI;
-			beta->pdx = cos(beta->_const  ) ;
-			beta->pdy = sin(beta->_const) ;
+			beta->pdx = cos(beta->_const);
+			beta->pdy = sin(beta->_const);
 		 }
 		 else
 		 {
@@ -147,12 +147,12 @@ void drw_line(t_beta *beta)
 		// calcul destance
 			if ((beta->_const * 180)/PI > 90 && (beta->_const * 180)/PI < 270)
 			{
-				dx = (beta->p_x * B  + beta->shfit_x) - (int)(((beta->p_x * B  + beta->shfit_x) / B) + __j ) * B;
+				dx = beta->pos_px - (int)((beta->pos_px / B) + __j ) * B;
 				new_des_x = (dx / cos(beta->_const)) + 1 ;
 			}
 			else
 			{
-				dx = (beta->p_x * B  + beta->shfit_x) - (int)(((beta->p_x * B  + beta->shfit_x) / B) + 1 - __j) * B;
+				dx = beta->pos_px - (int)((beta->pos_px / B) + 1 - __j) * B;
 				new_des_x = (dx / cos(beta->_const)) + 1 ;
 			}
 
@@ -217,13 +217,13 @@ void drw_line(t_beta *beta)
 
 			if (((beta->_const * 180)/PI) > 180 && ((beta->_const * 180)/PI) < 360)
 			{
-				dy = (beta->p_y * B  + beta->shfit_y) - (int)(((beta->p_y * B  + beta->shfit_y) / B) + __j ) * B;
+				dy = beta->pos_py - (int)((beta->pos_py / B) + __j ) * B;
 				new_des_y = (dy / sin(beta->_const))  + 1;
 
 			}
 			else
 			{
-				dy = (beta->p_y * B  + beta->shfit_y) - (int)(((beta->p_y * B  + beta->shfit_y) / B) + 1 - __j)  * B;
+				dy = beta->pos_py - (int)((beta->pos_py / B) + 1 - __j)  * B;
 				new_des_y = (dy / sin(beta->_const)) + 1;
 			}
 			
@@ -347,8 +347,8 @@ void drw_line(t_beta *beta)
 		ver1 = 1;
 		beta->sprits_x_inter = ((beta->p_x*B+beta->shfit_x - beta->pdx * beta->sprits));
 		beta->sprits_y_inter = ((beta->p_y*B+beta->shfit_y - beta->pdy * beta->sprits));
-		beta->intersect_x = ((beta->p_x*B+beta->shfit_x - beta->pdx * beta->__des ));
-		beta->intersect_y = ((beta->p_y*B+beta->shfit_y - beta->pdy * beta->__des));
+		beta->intersect_x = ((beta->pos_px - beta->pdx * beta->__des ));
+		beta->intersect_y = ((beta->pos_py - beta->pdy * beta->__des));
 		// if ((beta->intersect_x / B) - ((int)(beta->intersect_x / B)) != 0)
 		// {
 
@@ -359,8 +359,8 @@ void drw_line(t_beta *beta)
 		// }
 
 			float tmp_x, tmp_y;
-			float destance_x =  beta->pos_px - ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des ));
-			float destance_y =  beta->pos_py - ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des));
+			float destance_x =  (beta->pos_px - ((beta->p_x*B+beta->shfit_x + beta->pdx * beta->__des )));
+			float destance_y =  (beta->pos_py - ((beta->p_y*B+beta->shfit_y + beta->pdy * beta->__des)));
 			float step = fmax(fabs(destance_x), fabs(destance_y));
 			destance_x = (destance_x) / step;
 			destance_y = (destance_y) / step;
@@ -383,7 +383,7 @@ void drw_line(t_beta *beta)
 
 				it++;
 			}
-			draw_wall(beta);
+			// draw_wall(beta);
 			beta->wall_x += 0.97;
 			it = 1;
 	}
