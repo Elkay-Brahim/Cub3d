@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/07/29 13:17:28 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/07/31 12:23:28 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@
 #define mapWidth 24
 #define mapHeight 24
 #define B 40
+#define PI 3.14159265359
+#define WALL 560
+
+
+#define WALL_SIDE_X 1
+#define WALL_SIDE_Y 2
 
 #include <mlx.h>
 #include <stdlib.h>
@@ -52,6 +58,26 @@ typedef struct s_beta
 	float	_const;
 	float	pdx;
 	float	pdy;
+	//------raycasting------
+	float __des;
+	int inter_wall_side;
+	float wall_x;
+	float	_pdx;
+	float	_pdy;
+	float	_angle;
+	float __angle_start;
+	float __angle_end;
+	float pos_px;
+	float pos_py;
+	float new_des_x;
+	float new_des_y;
+	float intersect_x;
+	float intersect_y;
+	float dx;
+	float dy;
+	//-------keyhook-----
+	int index;
+	
 	float	shift_x;
 	float	shift_y;
 	int		player_x;
@@ -80,4 +106,10 @@ typedef struct s_dda
 	int		color;
 }		t_dda;
 
+int worldMap[mapWidth][mapHeight];
+
+
+void raycasting(t_beta *beta);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void    draw_wall(t_beta *beta);
 #endif

@@ -6,21 +6,20 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/07/29 17:01:54 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/07/31 20:11:28 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int worldMap[mapWidth][mapHeight]=
-{
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+int worldMap[mapWidth][mapHeight] = {
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
   {1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,1},
   {1,0,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1},
   {1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1},
   {1,0,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1},
-  {1,0,1,0,0,2,0,3,0,0,1,0,0,0,0,0,1},
+  {1,0,1,0,0,2,0,0,0,0,1,0,0,0,0,0,1},
   {1,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,1},
   {1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
   {1,0,1,0,0,0,1,1,1,1,5,0,0,1,0,0,1},
@@ -29,6 +28,8 @@ int worldMap[mapWidth][mapHeight]=
   {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
+
+
 
 int	get_color(t_data *data, int x, int y)
 {
@@ -144,6 +145,19 @@ void	draw_line(t_beta *beta, int i, int y, int x)
 	dda_draw(beta, &dda);
 }
 
+void player_represent(t_beta *beta)
+{
+		int i = 0;
+		while(i < 10)
+		{
+			my_mlx_pixel_put(&beta->image, (((beta->player_x * B) + i) + beta->shift_x) - 5 , (((beta->player_y * B)) + beta->shift_y) - 5 , 0xff0000);
+			my_mlx_pixel_put(&beta->image, (((beta->player_x * B))+ beta->shift_x) - 5 ,(((beta->player_y * B) + i)+ beta->shift_y) - 5 , 0xff0000);
+			my_mlx_pixel_put(&beta->image, ((((beta->player_x * B) + 10) - i)+ beta->shift_x ) - 5,(((beta->player_y * B) + 10) + beta->shift_y) - 5, 0xff0000);
+			my_mlx_pixel_put(&beta->image, (((beta->player_x * B) + 10) + beta->shift_x) - 5 ,((((beta->player_y * B) + 10) - i) + beta->shift_y) -5, 0xff0000);
+			i++;
+		}
+}
+
 void	randring(t_beta *beta)
 {
 	int	i;
@@ -166,6 +180,8 @@ void	randring(t_beta *beta)
 			}
 		}
 	}
+	player_represent(beta);
+	raycasting(beta);
 }
 
 void backgrand(t_beta *beta)
@@ -190,10 +206,88 @@ void backgrand(t_beta *beta)
 	return;
 }
 
+int check_wall(t_beta *beta, int keycode)
+{
+	int x;
+	int y;
+	int x1;
+	int y1;
+	if(keycode == 126)
+	{
+		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*15)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdy*15) / B));
+		x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*20)/B));
+		y1 = (int)(((beta->player_y * B + beta->shift_y - beta->pdy) / B));
+		
+	}
+	else if (keycode == 125)
+	{
+		x = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*15)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdy*15) / B));
+		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*20)/B));
+		y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdy) / B));
+	}
+
+
+	if (worldMap[y][x] != 1 && worldMap[y1][x1] != 1)
+		return(0);
+	
+	return(-1);
+}
+
+
+int	key_hook(int keycode, t_beta *beta)
+{
+	int b = 0;
+
+		if (keycode == 126  && check_wall(beta, keycode) == 0 )
+		{
+
+			beta->shift_y -= beta->pdy * 5;
+			beta->shift_x -= beta->pdx * 5;
+		}
+		 if (keycode == 125 && check_wall(beta, keycode) == 0)
+		{
+			beta->shift_y += beta->pdy* 5;
+			beta->shift_x += beta->pdx*5;
+
+		}
+	 if (keycode == 124)
+		{
+			beta->_const += 0.1;
+			if(beta->_const > 2 * PI)
+				beta->_const -= 2 * PI;
+			beta->pdx = cos(beta->_const);
+			beta->pdy = sin(beta->_const);
+		}
+		else if (keycode == 123)
+		{
+			beta->_const -= 0.1;
+			if (beta->_const < 0)
+				beta->_const += 2 * PI;
+			beta->pdx = cos(beta->_const) ;
+			beta->pdy = sin(beta->_const) ;
+
+		}
+
+		mlx_clear_window(beta->mlx, beta->win);
+		bzero(beta->image3D.addr, sizeof(int)*(screenWidth / 2) * screenHeight );
+		backgrand(beta);
+		randring(beta);
+		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
+		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
+	return(0);
+}
+
+
+
+
+
+
 void	ft_init(t_beta *beta, char *arg)
 {
 	// parse_map(beta, arg);
-	beta->_const = 30 * 0.0174532925;
+	beta->_const = 70 * 0.0174532925;
 	beta->pdx = cos(beta->_const);
 	beta->pdy = sin(beta->_const);
 	beta->i = 00, beta->y = 0, beta->shift_x = 0, beta->shift_y = 0;
@@ -211,8 +305,8 @@ void	ft_init(t_beta *beta, char *arg)
 	randring(beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
-	// mlx_key_hook(beta->win, key_hook, beta);
-	// mlx_hook(beta->win, 2, 0, key_hook, beta);
+	mlx_key_hook(beta->win, key_hook, beta);
+	mlx_hook(beta->win, 2, 0, key_hook, beta);
 	mlx_loop(beta->mlx);
 }
 
