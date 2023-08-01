@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:48 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/28 17:44:51 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/07/29 17:16:11 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,12 @@ typedef struct s_data {
 	int		endian;
 }				t_data;
 
+typedef	struct s_map_textur
+{
+	int	**map;
+	int	height;
+	int	whidth;
+}		t_map_textur;
 
 typedef struct s_beta{
 	t_data image;
@@ -53,6 +59,9 @@ typedef struct s_beta{
 	float shfit_y;
 	float pdx;
 
+	t_map_textur *txr_x;
+	t_map_textur *txr_y;
+	t_map_textur *door;
 	int	  inter_wall_side;
 	int	  inter_wall_side1;
 	int **map_color;
