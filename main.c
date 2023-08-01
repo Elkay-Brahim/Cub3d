@@ -390,7 +390,7 @@ void drw_line(t_beta *beta)
 	beta->_const = beta->save;
 	beta->pdy = __save;
 	beta->pdx = _save;
-	printf("********** %f\n", beta->wall_x);
+	// printf("********** %f\n", beta->wall_x);
 	beta->wall_x = 0;
 }
 
@@ -512,16 +512,19 @@ int	key_hook(int keycode, t_beta *beta)
 	int b = 0;
 	if (worldMap[(int)(((beta->p_y*B+beta->shfit_y - beta->pdy*10)/B))][(int)(((beta->p_x*B+beta->shfit_x - beta->pdx*10)/B))] != 1)
 	{
-
+		if (worldMap[(int)(((beta->p_y*B+beta->shfit_y - beta->pdy)/B))][(int)(((beta->p_x*B+beta->shfit_x - beta->pdx)/B))] == 1)
+			return (1);
+		printf("%d\n")
 		if (keycode == 126)
 		{
-
 			beta->shfit_y -= beta->pdy*5;
 			beta->shfit_x -= beta->pdx*5;
 		}
 	}
 	if (worldMap[(int)(((beta->p_y*B+beta->shfit_y + beta->pdy*10)/B))][(int)(((beta->p_x*B+beta->shfit_x + beta->pdx *10)/B))] != 1)
 	{
+		if (worldMap[(int)(((beta->p_y*B+beta->shfit_y + beta->pdy)/B))][(int)(((beta->p_x*B+beta->shfit_x + beta->pdx)/B))] == 1)
+			return (1);
 		 if (keycode == 125)
 		{
 			beta->shfit_y += beta->pdy* 5;
@@ -555,45 +558,7 @@ int	key_hook(int keycode, t_beta *beta)
 		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
 	return(0);
 }
-void parse_map(char *str)
-{
-	int		i;
-	char	*map;
-	char	*read;
-	char 	**new1;
-	int		fd;
 
-	map = calloc(1,1);
-	i = strlen(str);
-	if (i <= 4)
-	{
-		printf("Error\n");
-		exit(1);
-	}
-	char *new = str+(i-4);
-	if (strcmp(new, ".cub") != 0)
-	{
-		printf("Error");
-		exit(1);
-	}
-	// while(1)
-	// {
-	// 	read =  get_next_line(fd);
-	// 	if (read == NULL)
-	// 		break
-	// 	if (read[0] == '\n')
-	// 	{
-	// 		printf("Error\n");
-	// 		exit(1);
-	// 	}
-	// 	map = ft_strjoin(map, read);
-	// }
-	// new = ft_split(map, '\n');
-	// free(map);
-
-
-	
-}
 
 t_map_textur *read_textur_map(void *mlx, char *textur_path)
 {
@@ -637,7 +602,6 @@ int main(int ac, char **av)
 	beta.image.addr = mlx_get_data_addr(beta.image.img, &beta.image.bits_per_pixel, &beta.image.line_length, &beta.image.endian);
 	beta.image3D.img = mlx_new_image(beta.mlx, screenWidth / 2, screenHeight);
 	beta.image3D.addr = mlx_get_data_addr(beta.image3D.img, &beta.image3D.bits_per_pixel, &beta.image3D.line_length, &beta.image3D.endian);
-	parse_map(av[1]);
 
 	// textur :
 	beta.txr_x = read_textur_map(beta.mlx, "test.xpm");

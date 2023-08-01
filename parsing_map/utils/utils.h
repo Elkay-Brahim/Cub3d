@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/31 15:15:46 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/07/31 15:19:46 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define UTILS_H
 
 # include <stdlib.h>
-// # include "get_next_line/get_next_line.h"
 
 void	*ft_calloc(size_t count, size_t size);
 char	*ft_strchr(const char *s, int c);

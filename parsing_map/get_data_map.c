@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 14:53:45 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/31 10:33:47 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/07/31 17:12:43 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ void    free_line(t_line *base)
 
 void    free_map(t_map *map)
 {
-    if (map->map)
-        free(map->map);
+    int j;
+
+    j = 0;
     if (map->n_path)
         free(map->n_path);
     if (map->s_path)
@@ -67,6 +68,15 @@ void    free_map(t_map *map)
         free(map->w_path);
     if (map->e_path)
         free(map->e_path);
+    if (map->map)
+    {
+        while (j < map->height)
+        {
+            free(map->map[j]);
+            j++;
+        }
+        free(map->map);
+    }
     free(map);
     return ;
 }
