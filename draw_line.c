@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/01 11:00:30 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/01 13:28:38 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void    draw_____line(t_beta *beta, t_cord p1, t_cord p2)
     while (i < line.max)
     {
         text_y = fabs((beta->textur[1].height - 1) - ((beta->textur[1].height*(fabs(p2.y - line.new_y))) /line.max));
-        if (line.new_y >= 0 && line.new_y < screenHeight && line.new_x < screenWidth / 2)
+        if (line.new_y >= 0 && line.new_y < screenHeight && line.new_x < screenWidth )
             my_mlx_pixel_put(&beta->image3D, line.new_x, line.new_y, beta->textur[1].map[text_y][text_x]);
         // printf ("text_y :%d, text_x: %d color: %d\n", text_y,text_x, beta->map_color[text_y][text_x]);
         line.new_x += line.step_x;
@@ -146,8 +146,8 @@ void    draw_wall(t_beta *beta)
 
     // p1.color = beta->color;
 
-    while (p1.x < const_1)
-    {
+    // while (p1.x < const_1)
+    // {
         p2.color = i;
         draw_____line(beta, p1, p2);
         // printf("**********\n");
@@ -162,5 +162,5 @@ void    draw_wall(t_beta *beta)
         // sp2.x++;
         i++;
 
-    }
+    // }
 }

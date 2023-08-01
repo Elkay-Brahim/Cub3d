@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/07/31 20:13:10 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/01 15:49:36 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void raycasting(t_beta *beta)
 		//-------fold of vew
 		if (beta->__angle_start <= beta->_const)
 		 {
-			beta->__angle_start += 0.0015;
+			beta->__angle_start += ABR;
 			if(beta->__angle_start > 2 * PI)
 				beta->__angle_start -= 2 * PI;
 			beta->_pdx = cos(beta->__angle_start);
@@ -66,7 +66,7 @@ void raycasting(t_beta *beta)
 		 }
 		 else
 		 {
-			beta->__angle_start += 0.0015;
+			beta->__angle_start += ABR;
 			if (beta->__angle_start < 0)
 				beta->__angle_start += 2 * PI;
 			beta->_pdx = cos(beta->__angle_start);
@@ -80,12 +80,12 @@ void raycasting(t_beta *beta)
 			if ((beta->__angle_start * 180)/PI > 90 && (beta->__angle_start * 180)/PI < 270)
 			{
 				beta->dx = beta->pos_px - (int)((beta->pos_px / B) + __j ) * B;
-				beta->new_des_x = (beta->dx / cos(beta->__angle_start)) + 1 ;
+				beta->new_des_x = (beta->dx / cos(beta->__angle_start));
 			}
 			else
 			{
 				beta->dx = beta->pos_px - (int)((beta->pos_px / B) + 1 - __j) * B;
-				beta->new_des_x = (beta->dx / cos(beta->__angle_start)) + 1 ;
+				beta->new_des_x = (beta->dx / cos(beta->__angle_start)) + 1;
 			}
 			//----breaks of x
 			beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_x)/B);
@@ -131,12 +131,12 @@ void raycasting(t_beta *beta)
 			if (((beta->__angle_start * 180)/PI) > 180 && ((beta->__angle_start * 180)/PI) < 360)
 			{
 				beta->dy = beta->pos_py - (int)((beta->pos_py / B) + __j ) * B;
-				beta->new_des_y = (beta->dy / sin(beta->__angle_start))  + 1;
+				beta->new_des_y = (beta->dy / sin(beta->__angle_start)) ;
 			}
 			else
 			{
 				beta->dy = beta->pos_py - (int)((beta->pos_py / B) + 1 - __j)  * B;
-				beta->new_des_y = (beta->dy / sin(beta->__angle_start)) + 1;
+				beta->new_des_y = (beta->dy / sin(beta->__angle_start)) + 1 ;
 			}
 			//----breaks of y
 			beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_y)/B);
@@ -176,7 +176,7 @@ void raycasting(t_beta *beta)
 		 }
 
 		 //----get min destance and intersection
-		if (fabs(beta->new_des_x) <= fabs(beta->new_des_y))
+		if (fabs(beta->new_des_x) < fabs(beta->new_des_y))
 		{
 			beta->__des = fabs(beta->new_des_x);
 			beta->inter_wall_side = WALL_SIDE_X;
@@ -192,6 +192,6 @@ void raycasting(t_beta *beta)
 		//---dda
 		_dda(beta);
 		draw_wall(beta);
-		beta->wall_x += 0.97;
+		beta->wall_x += 1;
 	}
 }

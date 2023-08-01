@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/07/31 20:11:28 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/01 13:23:23 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ int worldMap[mapWidth][mapHeight] = {
   {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
-
-
 
 int	get_color(t_data *data, int x, int y)
 {
@@ -191,7 +189,7 @@ void backgrand(t_beta *beta)
 	int color;
 	while(y < screenHeight-1)
 	{
-		x = screenWidth/2;
+		x = 0;
 		if (y < screenHeight/2)
 			color = 0x3881CA;
 		else
@@ -214,17 +212,17 @@ int check_wall(t_beta *beta, int keycode)
 	int y1;
 	if(keycode == 126)
 	{
-		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*15)/B));
-		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdy*15) / B));
-		x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*20)/B));
+		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*3)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdy*3) / B));
+		x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y - beta->pdy) / B));
 		
 	}
 	else if (keycode == 125)
 	{
-		x = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*15)/B));
-		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdy*15) / B));
-		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*20)/B));
+		x = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*3)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdy*3) / B));
+		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdy) / B));
 	}
 
@@ -243,13 +241,13 @@ int	key_hook(int keycode, t_beta *beta)
 		if (keycode == 126  && check_wall(beta, keycode) == 0 )
 		{
 
-			beta->shift_y -= beta->pdy * 5;
-			beta->shift_x -= beta->pdx * 5;
+			beta->shift_y -= beta->pdy * 1.5;
+			beta->shift_x -= beta->pdx * 1.5;
 		}
 		 if (keycode == 125 && check_wall(beta, keycode) == 0)
 		{
-			beta->shift_y += beta->pdy* 5;
-			beta->shift_x += beta->pdx*5;
+			beta->shift_y += beta->pdy* 1.5;
+			beta->shift_x += beta->pdx*1.5;
 
 		}
 	 if (keycode == 124)
@@ -271,11 +269,11 @@ int	key_hook(int keycode, t_beta *beta)
 		}
 
 		mlx_clear_window(beta->mlx, beta->win);
-		bzero(beta->image3D.addr, sizeof(int)*(screenWidth / 2) * screenHeight );
+		bzero(beta->image3D.addr, sizeof(int)*(screenWidth) * screenHeight );
 		backgrand(beta);
 		randring(beta);
-		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
-		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
+		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
+		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
 	return(0);
 }
 
@@ -293,9 +291,9 @@ void	ft_init(t_beta *beta, char *arg)
 	beta->i = 00, beta->y = 0, beta->shift_x = 0, beta->shift_y = 0;
 	beta->mlx = mlx_init();
 	beta->win = mlx_new_window(beta->mlx, screenWidth, screenHeight, "CUB3D");
-	beta->image.img = mlx_new_image(beta->mlx, screenWidth, screenHeight);
+	beta->image.img = mlx_new_image(beta->mlx, B*17, B*14);
 	beta->image.addr = mlx_get_data_addr(beta->image.img, &beta->image.bits_per_pixel, &beta->image.line_length, &beta->image.endian);
-	beta->image3D.img = mlx_new_image(beta->mlx, screenWidth / 2, screenHeight);
+	beta->image3D.img = mlx_new_image(beta->mlx, screenWidth , screenHeight);
 	beta->image3D.addr = mlx_get_data_addr(beta->image3D.img, &beta->image3D.bits_per_pixel, &beta->image3D.line_length, &beta->image3D.endian);
 	ft_textur(beta);
 	backgrand(beta);
@@ -303,8 +301,8 @@ void	ft_init(t_beta *beta, char *arg)
 	beta->map->width = 17;
 	beta->map->height = 14;
 	randring(beta);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, 0);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, screenWidth / 2, 0);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
 	mlx_key_hook(beta->win, key_hook, beta);
 	mlx_hook(beta->win, 2, 0, key_hook, beta);
 	mlx_loop(beta->mlx);

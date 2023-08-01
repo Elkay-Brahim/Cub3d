@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:07 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/31 20:13:27 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/01 13:28:07 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -451,11 +451,11 @@ t_map *littel_world(char *map_path)
     return (map);
 }
 
-int main(int ac, char **av)
-{
-    (void)ac;
-    t_map *map = littel_world(av[1]);
-    if (map)
-        print_map(map);
-    while(1);
-}
+// int main(int ac, char **av)
+// {
+//     (void)ac;
+//     t_map *map = littel_world(av[1]);
+//     if (map)
+//         print_map(map);
+//     while(1);
+// }

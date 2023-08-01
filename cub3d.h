@@ -3,23 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/07/31 12:23:28 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/01 15:35:17 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#define screenHeight 560
+#define screenHeight 800
 #define screenWidth 1360
 #define mapWidth 24
 #define mapHeight 24
-#define B 40
+#define B 10
 #define PI 3.14159265359
 #define WALL 560
+#define ABR 0.00077 // Angle Between Rays
 
 
 #define WALL_SIDE_X 1
@@ -28,6 +29,7 @@
 #include <mlx.h>
 #include <stdlib.h>
 #include <math.h>
+// #include "parsing_map/parsing.h"
 #include <string.h> // must be remouv
 #include <unistd.h> // must be remouv
 #include <stdio.h> // must be remouv
