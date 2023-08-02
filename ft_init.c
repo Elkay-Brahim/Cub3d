@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/01 13:23:23 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 15:54:06 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ int check_wall(t_beta *beta, int keycode)
 	int y;
 	int x1;
 	int y1;
-	if(keycode == 126)
+	if(keycode == 13)
 	{
 		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*3)/B));
 		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdy*3) / B));
@@ -218,12 +218,26 @@ int check_wall(t_beta *beta, int keycode)
 		y1 = (int)(((beta->player_y * B + beta->shift_y - beta->pdy) / B));
 		
 	}
-	else if (keycode == 125)
+	else if (keycode == 1)
 	{
 		x = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*3)/B));
 		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdy*3) / B));
 		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdy) / B));
+	}
+	else if (keycode == 0)
+	{
+		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*3)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdy*3) / B));
+		// x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*5)/B));
+		// y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdy) / B));
+	}
+	else if (keycode == 2)
+	{
+		x = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*3)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdy*3) / B));
+		// x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*5)/B));
+		// y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdy) / B));
 	}
 
 
@@ -238,17 +252,30 @@ int	key_hook(int keycode, t_beta *beta)
 {
 	int b = 0;
 
-		if (keycode == 126  && check_wall(beta, keycode) == 0 )
+		printf("%d\n", keycode);
+		if (keycode == 13  && check_wall(beta, keycode) == 0 )
 		{
 
 			beta->shift_y -= beta->pdy * 1.5;
 			beta->shift_x -= beta->pdx * 1.5;
 		}
-		 if (keycode == 125 && check_wall(beta, keycode) == 0)
+		if (keycode == 1 && check_wall(beta, keycode) == 0)
 		{
 			beta->shift_y += beta->pdy* 1.5;
 			beta->shift_x += beta->pdx*1.5;
 
+		}
+		if (keycode == 0  && check_wall(beta, keycode) == 0 )
+		{
+			beta->shift_x -= beta->pdy * 1.5 ;
+			beta->shift_y += beta->pdx*1.5;
+			// beta->shift_x = beta->pdx * 1.5;
+		}
+		if (keycode == 2  && check_wall(beta, keycode) == 0)
+		{
+			beta->shift_x += beta->pdy * 1.5 ;
+			beta->shift_y -= beta->pdx*1.5;
+			// beta->shift_x = beta->pdx * 1.5;
 		}
 	 if (keycode == 124)
 		{
