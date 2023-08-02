@@ -6,13 +6,13 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/01 13:23:23 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 16:43:31 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int worldMap[mapWidth][mapHeight] = {
+int worldMap[24][24] = {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
   {1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,1},
@@ -107,16 +107,16 @@ void	dda_draw(t_beta *beta, t_dda *dda)
 	}
 }
 
-int	color(int y, int i)
+int	color(t_beta *beta, int y, int i)
 {
 	int color;
 	
-	if (worldMap[y][i] == 1)
+	if (beta->map->map[y][i] == 1)
 		color = 0x00a86b;
-	else if (worldMap[y][i] == 2)
+	else if (beta->map->map[y][i] == 3)
 		color = 0xfff000;
-	else if (worldMap[y][i] == 3)
-		color = 0x0000ff;
+	// else if (beta->map->map[y][i] == 3)
+	// 	color = 0x0000ff;
 	else
 		color = 0x000000;
 	return (color);
@@ -126,7 +126,7 @@ void	draw_line(t_beta *beta, int i, int y, int x)
 {
 	t_dda dda;
 
-	dda.color = color(y, i);
+	dda.color = color(beta, y, i);
 	dda.m_x = x;
 	dda.m_y = 0;
 	dda.start_x = (i * B);
@@ -171,7 +171,7 @@ void	randring(t_beta *beta)
 			x = -1;
 			while(++x <= B)
 				draw_line(beta, i, y, x);
-			if (worldMap[y][i] == 5)
+			if (beta->map->map[y][i] == 5)
 			{
 				beta->player_x = i;
 				beta->player_y = y;
@@ -227,7 +227,7 @@ int check_wall(t_beta *beta, int keycode)
 	}
 
 
-	if (worldMap[y][x] != 1 && worldMap[y1][x1] != 1)
+	if (beta->map->map[y][x] != 1 && beta->map->map[y1][x1] != 1)
 		return(0);
 	
 	return(-1);
@@ -237,7 +237,11 @@ int check_wall(t_beta *beta, int keycode)
 int	key_hook(int keycode, t_beta *beta)
 {
 	int b = 0;
-
+		if (keycode == 99999)
+		{
+			beta->shift_y += beta->pdy * 5;
+			beta->shift_x += beta->pdx * 5;
+		}
 		if (keycode == 126  && check_wall(beta, keycode) == 0 )
 		{
 
@@ -250,7 +254,7 @@ int	key_hook(int keycode, t_beta *beta)
 			beta->shift_x += beta->pdx*1.5;
 
 		}
-	 if (keycode == 124)
+	 	if (keycode == 124)
 		{
 			beta->_const += 0.1;
 			if(beta->_const > 2 * PI)
@@ -282,36 +286,43 @@ int	key_hook(int keycode, t_beta *beta)
 
 
 
-void	ft_init(t_beta *beta, char *arg)
+int	ft_init(t_beta *beta, char *arg)
 {
 	// parse_map(beta, arg);
-	beta->_const = 70 * 0.0174532925;
+	t_map_s	*first = littel_world(arg);
+	if (first == NULL)
+		return (1);
+	beta->_const = first->direction * 0.0174532925;
 	beta->pdx = cos(beta->_const);
 	beta->pdy = sin(beta->_const);
 	beta->i = 00, beta->y = 0, beta->shift_x = 0, beta->shift_y = 0;
 	beta->mlx = mlx_init();
 	beta->win = mlx_new_window(beta->mlx, screenWidth, screenHeight, "CUB3D");
-	beta->image.img = mlx_new_image(beta->mlx, B*17, B*14);
+	beta->image.img = mlx_new_image(beta->mlx, B*first->width, B*first->height);
 	beta->image.addr = mlx_get_data_addr(beta->image.img, &beta->image.bits_per_pixel, &beta->image.line_length, &beta->image.endian);
 	beta->image3D.img = mlx_new_image(beta->mlx, screenWidth , screenHeight);
 	beta->image3D.addr = mlx_get_data_addr(beta->image3D.img, &beta->image3D.bits_per_pixel, &beta->image3D.line_length, &beta->image3D.endian);
 	ft_textur(beta);
 	backgrand(beta);
+	print_map_s(first);
 	beta->map = calloc(sizeof(t_map), 1);
-	beta->map->width = 17;
-	beta->map->height = 14;
-	randring(beta);
+	beta->map->map = first->map;
+	beta->map->width = first->width ;
+	beta->map->height = first->height;
+	// randring(beta);
+	key_hook(99999, beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
 	mlx_key_hook(beta->win, key_hook, beta);
 	mlx_hook(beta->win, 2, 0, key_hook, beta);
 	mlx_loop(beta->mlx);
+	return (0);
 }
 
-int main()
+int main(int ac, char **av)
 {
 	t_beta *beta;
-
+	
 	beta = calloc(sizeof(t_beta), 1);
-	ft_init(beta, "NULL");
+	return(ft_init(beta, av[1]));
 }

@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/01 15:35:17 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 11:44:38 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 #include <mlx.h>
 #include <stdlib.h>
 #include <math.h>
-// #include "parsing_map/parsing.h"
+#include "parsing_map/parsing.h"
 #include <string.h> // must be remouv
 #include <unistd.h> // must be remouv
 #include <stdio.h> // must be remouv
