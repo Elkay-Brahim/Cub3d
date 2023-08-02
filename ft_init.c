@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 17:16:09 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 17:40:39 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,16 @@ t_map read_textur_map(void *mlx, char *textur_path)
     return (map);
 }
 
-void	ft_textur(t_beta *beta)
+void	ft_textur(t_beta *beta, t_map_s *map)
 {
 	int i;
 
 	i = 0;
 	beta->textur_path = calloc(sizeof(char *), 4);
-	beta->textur_path[0] = strdup("wall.xpm");
-	beta->textur_path[1] = strdup("shado.xpm");
-	beta->textur_path[2] = strdup("test.xpm");
-	beta->textur_path[3] = strdup("wall1.xpm");
+	beta->textur_path[0] = strdup(map->w_path);
+	beta->textur_path[1] = strdup(map->n_path);
+	beta->textur_path[2] = strdup(map->e_path);
+	beta->textur_path[3] = strdup(map->s_path);
 	beta->textur = calloc(sizeof(t_map), 4);
 	
 	while(i < 4)
@@ -191,9 +191,9 @@ void backgrand(t_beta *beta)
 	{
 		x = 0;
 		if (y < screenHeight/2)
-			color = 0x3881CA;
+			color = beta->c_color;
 		else
-			color = 0x275B2A;
+			color = beta->f_color;
 		while(x < screenWidth-1)
 		{
 			my_mlx_pixel_put(&beta->image3D, x, y, color);
@@ -306,13 +306,15 @@ int	ft_init(t_beta *beta, char *arg)
 	beta->image.addr = mlx_get_data_addr(beta->image.img, &beta->image.bits_per_pixel, &beta->image.line_length, &beta->image.endian);
 	beta->image3D.img = mlx_new_image(beta->mlx, screenWidth , screenHeight);
 	beta->image3D.addr = mlx_get_data_addr(beta->image3D.img, &beta->image3D.bits_per_pixel, &beta->image3D.line_length, &beta->image3D.endian);
-	ft_textur(beta);
+	ft_textur(beta, first);
+	beta->f_color = first->f_color;
+	beta->c_color = first->c_color;
 	backgrand(beta);
-	print_map_s(first);
 	beta->map = calloc(sizeof(t_map), 1);
 	beta->map->map = first->map;
 	beta->map->width = first->width ;
 	beta->map->height = first->height;
+	print_map_s(first);
 	// randring(beta);
 	key_hook(99999, beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);

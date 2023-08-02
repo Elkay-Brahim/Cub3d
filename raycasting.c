@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 11:39:03 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 18:55:52 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,11 +182,19 @@ void raycasting(t_beta *beta)
 			if (beta->__des < 1)
 				beta->__des = 1;
 			beta->inter_wall_side = WALL_SIDE_X;
+			if ((beta->__angle_start * 180)/PI > 90 && (beta->__angle_start * 180)/PI < 270)
+				beta->textur_i = 2;
+			else
+				beta->textur_i = 0;
 		}
 		else
 		{
 			beta->__des = fabs(beta->new_des_y);
 			beta->inter_wall_side = WALL_SIDE_Y;
+			if (((beta->__angle_start * 180)/PI > 0 && (beta->__angle_start * 180)/PI < 180) || (beta->__angle_start * 180)/PI > 360)
+				beta->textur_i = 1;
+			else
+				beta->textur_i = 3;
 		}
 		beta->intersect_x = ((beta->pos_px - beta->_pdx * beta->__des));
 		beta->intersect_y = ((beta->pos_py - beta->_pdy * beta->__des));

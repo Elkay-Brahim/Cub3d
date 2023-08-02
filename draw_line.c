@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/02 16:06:59 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 18:32:00 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,24 @@ void    draw_____line(t_beta *beta, t_cord p1, t_cord p2)
     int text_x;
     int text_y = 0;
 
+    // printf("textur %d\n", beta->textur_i);
     if (beta->inter_wall_side == WALL_SIDE_Y)
     {
         
-        text_x = (beta->textur[1].width / B ) * (beta->intersect_x - ((int)(beta->intersect_x / B ) * B));
+        text_x = (beta->textur[beta->textur_i].width / B ) * (beta->intersect_x - ((int)(beta->intersect_x / B ) * B));
     }
     else
     {
-        text_x = (beta->textur[1].width / B ) * (beta->intersect_y - ((int)(beta->intersect_y / B ) * B));
+        text_x = (beta->textur[beta->textur_i].width / B ) * (beta->intersect_y - ((int)(beta->intersect_y / B ) * B));
         
     }
     // printf("line max %f | dx:%f | dy:%f \n", line.max, line.dx, line.dy);
     // pause();
     while (i < line.max)
     {
-        text_y = fabs((beta->textur[1].height - 1) - ((beta->textur[1].height*(fabs(p2.y - line.new_y))) /line.max));
+        text_y = fabs((beta->textur[beta->textur_i].height - 1) - ((beta->textur[beta->textur_i].height*(fabs(p2.y - line.new_y))) /line.max));
         if (line.new_y >= 0 && line.new_y < screenHeight && line.new_x < screenWidth )
-            my_mlx_pixel_put(&beta->image3D, line.new_x, line.new_y, beta->textur[1].map[text_y][text_x]);
+            my_mlx_pixel_put(&beta->image3D, line.new_x, line.new_y, beta->textur[beta->textur_i].map[text_y][text_x]);
         // printf ("text_y :%d, text_x: %d color: %d\n", text_y,text_x, beta->map_color[text_y][text_x]);
         line.new_x += line.step_x;
         line.new_y += line.step_y;

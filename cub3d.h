@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 11:44:38 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 18:23:26 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@
 
 #define WALL_SIDE_X 1
 #define WALL_SIDE_Y 2
+
+#define TEXTUR_W 0
+#define TEXTUR_N 1
+#define TEXTUR_E 2
+#define TEXTUR_S 3
 
 #include <mlx.h>
 #include <stdlib.h>
@@ -57,7 +62,10 @@ typedef struct s_beta
 	t_data	image3D;
 	t_map	*map;
 	t_map	*textur;
+	int		f_color;
+	int		c_color;
 	float	_const;
+	int		textur_i;
 	float	pdx;
 	float	pdy;
 	//------raycasting------
