@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 16:43:31 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 17:16:09 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,8 +239,12 @@ int	key_hook(int keycode, t_beta *beta)
 	int b = 0;
 		if (keycode == 99999)
 		{
+			beta->pdx = cos(30 * 0.0174532925);
+			beta->pdy = sin(30 * 0.0174532925);
 			beta->shift_y += beta->pdy * 5;
 			beta->shift_x += beta->pdx * 5;
+			beta->pdx = cos(beta->_const) ;
+			beta->pdy = sin(beta->_const) ;
 		}
 		if (keycode == 126  && check_wall(beta, keycode) == 0 )
 		{
