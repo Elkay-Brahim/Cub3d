@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:23 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/01 12:01:27 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 10:07:13 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_line
     struct s_line *next; 
 }              t_line;
 
-typedef struct s_map
+typedef struct s_parsing_map
 {
 	int     **map;
     int     direction;
@@ -46,12 +46,13 @@ typedef struct s_map
     int     f_color;
     int     c_color;
     
-}		t_map;
+}		t_map_s;
 
 char *get_next_line(int fd);
 t_line  *get_data_map(int fd);
 void    free_line(t_line *base);
-void    free_map(t_map *map);
-t_map *littel_world(char *map_path);
+void    free_map(t_map_s *map);
+t_map_s *littel_world(char *map_path);
+void    print_map_s(t_map_s *map);
 
 #endif

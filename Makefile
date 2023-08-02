@@ -15,7 +15,7 @@ CC = cc
 CFLAGS = 
 
 $(NAME) : $(OBJ) $(HEADER) 
-		$(CC) $(CFLAGS) $(SRC) -lmlx -framework OpenGL -framework AppKit  -o $(NAME) 
+		$(CC) $(CFLAGS) $(SRC) -lmlx -framework OpenGL -framework AppKit  -fsanitize=address -g -o $(NAME) 
 
 all : $(NAME)
 

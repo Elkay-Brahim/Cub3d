@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/01 19:06:37 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/02 11:39:03 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,34 +90,34 @@ void raycasting(t_beta *beta)
 			//----breaks of x
 			beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_x)/B);
 			beta->y = ((int)(beta->player_y*B+beta->shift_y - beta->_pdy * beta->new_des_x)/B);
-			if (beta->y <= 0 || beta->y > 13 || beta->i <= 0 || beta->i > 16 )
+			if (beta->y <= 0 || beta->y > beta->map->height - 1 || beta->i <= 0 || beta->i > beta->map->width - 1)
 				break;
-			if (worldMap[beta->y][beta->i] == 1 || worldMap[beta->y][beta->i] == 2)
+			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
 			{
-				if (worldMap[beta->y][beta->i] == 2)
+				if (beta->map->map[beta->y][beta->i] == 3)
 					beta->new_des_x = beta->new_des_x;
 				break;
 			}
-			if (worldMap[beta->y][beta->i] == 0)
+			if (beta->map->map[beta->y][beta->i] == 0)
 			{
 				if (((beta->__angle_start * 180)/PI  > 0 && (beta->__angle_start * 180)/PI  < 90 )|| (beta->__angle_start * 180)/PI  > 360)
 				{
-					if ( worldMap[beta->y + 1][beta->i] == 1 && worldMap[beta->y][beta->i + 1] == 1)
+					if ( beta->map->map[beta->y + 1][beta->i] == 1 && beta->map->map[beta->y][beta->i + 1] == 1)
 						break;
 				}
 				else if ((beta->__angle_start * 180)/PI  > 90 && (beta->__angle_start * 180)/PI  < 180)
 				{
-					if ( worldMap[beta->y + 1][beta->i] == 1  && worldMap[beta->y][beta->i-1] == 1)
+					if ( beta->map->map[beta->y + 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
 						break;
 				}
 				else if ((beta->__angle_start * 180)/PI  > 180 && (beta->__angle_start * 180)/PI  < 270)
 				{
-					if ( worldMap[beta->y - 1][beta->i] == 1  && worldMap[beta->y][beta->i-1] == 1)
+					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
 						break;
 				}
 				else if ((beta->__angle_start * 180)/PI  > 270 && (beta->__angle_start * 180)/PI  < 360)
 				{
-					if ( worldMap[beta->y - 1][beta->i] == 1  && worldMap[beta->y][beta->i + 1] == 1)
+					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i + 1] == 1)
 						break;
 				}
 			}
@@ -141,34 +141,34 @@ void raycasting(t_beta *beta)
 			//----breaks of y
 			beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_y)/B);
 			beta->y = ((int)(beta->player_y*B+beta->shift_y - beta->_pdy * beta->new_des_y)/B);
-			if (beta->y <= 0 || beta->y > 13 || beta->i <= 0 || beta->i > 16 )
+			if (beta->y <= 0 || beta->y > beta->map->height - 1 || beta->i <= 0 || beta->i > beta->map->width - 1)
 				break;
-			if (worldMap[beta->y][beta->i] == 1 || worldMap[beta->y][beta->i] == 2)
+			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
 			{
-				if (worldMap[beta->y][beta->i] == 2)
+				if (beta->map->map[beta->y][beta->i] == 3)
 					beta->new_des_y = beta->new_des_y;
 				break;
 			}
-			if (worldMap[beta->y][beta->i] == 0)
+			if (beta->map->map[beta->y][beta->i] == 0)
 			{
 				if (((beta->__angle_start * 180)/PI  > 0 && (beta->__angle_start * 180)/PI  < 90 )|| (beta->__angle_start * 180)/PI  > 360)
 				{
-					if ( worldMap[beta->y + 1][beta->i] == 1 && worldMap[beta->y][beta->i + 1] == 1)
+					if ( beta->map->map[beta->y + 1][beta->i] == 1 && beta->map->map[beta->y][beta->i + 1] == 1)
 						break;
 				}
 				else if ((beta->__angle_start * 180)/PI  > 90 && (beta->__angle_start * 180)/PI  < 180)
 				{
-					if ( worldMap[beta->y + 1][beta->i] == 1  && worldMap[beta->y][beta->i-1] == 1)
+					if ( beta->map->map[beta->y + 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
 						break;
 				}
 				else if ((beta->__angle_start * 180)/PI  > 180 && (beta->__angle_start * 180)/PI  < 270)
 				{
-					if ( worldMap[beta->y - 1][beta->i] == 1  && worldMap[beta->y][beta->i-1] == 1)
+					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
 						break;
 				}
 				else if ((beta->__angle_start * 180)/PI  > 270 && (beta->__angle_start * 180)/PI  < 360)
 				{
-					if ( worldMap[beta->y - 1][beta->i] == 1  && worldMap[beta->y][beta->i + 1] == 1)
+					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i + 1] == 1)
 						break;
 				}
 			}
@@ -179,6 +179,8 @@ void raycasting(t_beta *beta)
 		if (fabs(beta->new_des_x) < fabs(beta->new_des_y))
 		{
 			beta->__des = fabs(beta->new_des_x);
+			if (beta->__des < 1)
+				beta->__des = 1;
 			beta->inter_wall_side = WALL_SIDE_X;
 		}
 		else
@@ -191,6 +193,7 @@ void raycasting(t_beta *beta)
 
 		//---dda
 		_dda(beta);
+		// printf("beta->wall %f\n", beta->wall_x);
 		draw_wall(beta);
 		beta->wall_x += 1;
 	}

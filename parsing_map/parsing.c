@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:07 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/01 13:28:07 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 16:42:42 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int check_ext(char *name, char *ext)
     return (0);
 }
 
-int    check_path(t_map *map, char **sp)
+int    check_path(t_map_s *map, char **sp)
 {
     if (ft_strlen(sp[0]) == 2 && sp[1] != NULL && sp[2] == NULL)
     {
@@ -100,7 +100,7 @@ int rgb_to_int(char *color)
     return(int_color);
 }
 
-int check_color(t_map *map, char **sp)
+int check_color(t_map_s *map, char **sp)
 {
     if (ft_strlen(sp[0]) == 1 && sp[1] != NULL && sp[2] == NULL)
     {
@@ -124,7 +124,7 @@ int check_color(t_map *map, char **sp)
     return (0);
 }
 
-int check_data(t_map *map)
+int check_data(t_map_s *map)
 {
     int fd;
     
@@ -177,7 +177,7 @@ int check_content(char *line, int *d)
     return (0);
 }
 
-void    print_map(t_map *map)
+void    print_map_s(t_map_s *map)
 {
     int i = 0;
     int j = 0;
@@ -206,7 +206,7 @@ void    print_map(t_map *map)
     }
 }
 
-void    final_map(t_map *map, char **line)
+void    final_map(t_map_s *map, char **line)
 {
     int tmp;
     int i;
@@ -229,12 +229,12 @@ void    final_map(t_map *map, char **line)
     }
     i = 0;
     tmp = 0;
-    map->map = ft_calloc(sizeof(int *), map->height);
+    map->map = ft_calloc(sizeof(int *), map->height+1);
     while (i < map->height)
     {
         if(line[j][tmp] != '\n')
         {
-            map->map[i] = ft_calloc(sizeof(int), map->width);
+            map->map[i] = ft_calloc(sizeof(int), map->width+1);
             size = ft_strlen(line[j]);
             while (tmp < map->width)
             {
@@ -264,10 +264,10 @@ void    final_map(t_map *map, char **line)
         }
         j++;
     }
-    // print_map(map);
+    // print_map_s(map);
 }
 
-int chech_border(t_map *map)
+int chech_border(t_map_s *map)
 {
     int i;
     int j;
@@ -294,7 +294,7 @@ int chech_border(t_map *map)
     return (0);
 }
 
-int check_map(t_map *map, char* line)
+int check_map(t_map_s *map, char* line)
 {
     int     i;
     char    **map_2d;
@@ -321,7 +321,7 @@ int check_map(t_map *map, char* line)
     return (0);
 }
 
-int get_map_element(t_map *map, char *line, int type)
+int get_map_s_element(t_map_s *map, char *line, int type)
 {
     char    **sp;
 
@@ -347,7 +347,7 @@ int get_map_element(t_map *map, char *line, int type)
     return (0);
 }
 
-int get_world(t_line *data, t_map *map)
+int get_world(t_line *data, t_map_s *map)
 {
     char    *map_line;
 
@@ -374,16 +374,16 @@ int get_world(t_line *data, t_map *map)
     return (0);
 }
 
-t_map   *get_map(t_line *data)
+t_map_s   *get_map_s(t_line *data)
 {
-    t_map   *map;
+    t_map_s   *map;
 
-    map = ft_calloc(sizeof(t_map), 1);
+    map = ft_calloc(sizeof(t_map_s), 1);
     map->c_color = -2;
     map->f_color = -2;
     while (data->type != 3)
     {
-        if (data->type != 0 && get_map_element(map, data->line, data->type) != 0)
+        if (data->type != 0 && get_map_s_element(map, data->line, data->type) != 0)
         {
             free_map(map);
             return (NULL);
@@ -424,12 +424,28 @@ int check_file(char *map_path)
     return (fd);
 }
 
-t_map *littel_world(char *map_path)
+void    change_direction(t_map_s *map)
+{
+    if (map)
+    {
+        if (map->direction == 'W')
+            map->direction = 0;
+        else if (map->direction == 'N')
+            map->direction = 90;
+        else if (map->direction == 'E')
+            map->direction = 180;
+        else
+            map->direction = 270;
+    }
+    return ;
+}
+
+t_map_s *littel_world(char *map_path)
 {
     int     fd;
     t_line  *base_line;
     t_line  *tmp;
-    t_map   *map;
+    t_map_s   *map;
 
     fd = check_file(map_path);
     if (fd == -1)
@@ -442,20 +458,17 @@ t_map *littel_world(char *map_path)
         return (NULL);
     } 
     tmp = base_line;
-    map = get_map(tmp);
+    map = get_map_s(tmp);
+    change_direction(map);
     free_line(base_line);
-    if (map != NULL)
-    {
-        print_map(map);
-    }
     return (map);
 }
 
 // int main(int ac, char **av)
 // {
 //     (void)ac;
-//     t_map *map = littel_world(av[1]);
+//     t_map_s *map = littel_world(av[1]);
 //     if (map)
-//         print_map(map);
+//         print_map_s(map);
 //     while(1);
 // }

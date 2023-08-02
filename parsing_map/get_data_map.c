@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 14:53:45 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/31 17:12:43 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/01 19:55:33 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void    free_line(t_line *base)
     return ;
 }
 
-void    free_map(t_map *map)
+void    free_map(t_map_s *map)
 {
     int j;
 
