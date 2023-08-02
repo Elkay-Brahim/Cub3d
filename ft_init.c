@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 17:40:39 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 18:58:19 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ int check_wall(t_beta *beta, int keycode)
 	int y;
 	int x1;
 	int y1;
-	if(keycode == 126)
+	if(keycode == 13)
 	{
 		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*3)/B));
 		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdy*3) / B));
@@ -218,12 +218,28 @@ int check_wall(t_beta *beta, int keycode)
 		y1 = (int)(((beta->player_y * B + beta->shift_y - beta->pdy) / B));
 		
 	}
-	else if (keycode == 125)
+	else if (keycode == 1)
 	{
 		x = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*3)/B));
 		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdy*3) / B));
 		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdy) / B));
+	}
+	else if (keycode == 0)
+	{
+		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdy*3)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdx*3) / B));
+		x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdy* 5)/B));
+		y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdx) / B));
+
+	}
+	else if (keycode == 2)
+	{
+		x = (int)(((beta->player_x * B + beta->shift_x + beta->pdy *3)/B));
+		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdx *3) / B));
+		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdy * 5)/B));
+		y1 = (int)(((beta->player_y * B + beta->shift_y - beta->pdx ) / B));
+
 	}
 
 
@@ -246,19 +262,31 @@ int	key_hook(int keycode, t_beta *beta)
 			beta->pdx = cos(beta->_const) ;
 			beta->pdy = sin(beta->_const) ;
 		}
-		if (keycode == 126  && check_wall(beta, keycode) == 0 )
+		if (keycode == 13  && check_wall(beta, keycode) == 0 )
 		{
 
 			beta->shift_y -= beta->pdy * 1.5;
 			beta->shift_x -= beta->pdx * 1.5;
 		}
-		 if (keycode == 125 && check_wall(beta, keycode) == 0)
+		if (keycode == 1 && check_wall(beta, keycode) == 0)
 		{
 			beta->shift_y += beta->pdy* 1.5;
 			beta->shift_x += beta->pdx*1.5;
 
 		}
-	 	if (keycode == 124)
+		if (keycode == 0  && check_wall(beta, keycode) == 0 )
+		{
+			beta->shift_x -= beta->pdy * 1.5 ;
+			beta->shift_y += beta->pdx*1.5;
+			// beta->shift_x = beta->pdx * 1.5;
+		}
+		if (keycode == 2  && check_wall(beta, keycode) == 0)
+		{
+			beta->shift_x += beta->pdy * 1.5 ;
+			beta->shift_y -= beta->pdx*1.5;
+			// beta->shift_x = beta->pdx * 1.5;
+		}
+	 if (keycode == 124)
 		{
 			beta->_const += 0.1;
 			if(beta->_const > 2 * PI)
