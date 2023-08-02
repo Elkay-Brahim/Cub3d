@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 17:08:32 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/02 17:11:07 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,18 +268,18 @@ int	key_hook(int keycode, t_beta *beta)
 			beta->shift_x += beta->pdx*1.5;
 
 		}
-		if (keycode == 0  && check_wall(beta, keycode) == 0 )
-		{
-			beta->shift_x -= beta->pdy * 1.5 ;
-			beta->shift_y += beta->pdx*1.5;
-			// beta->shift_x = beta->pdx * 1.5;
-		}
-		if (keycode == 2  && check_wall(beta, keycode) == 0)
-		{
-			beta->shift_x += beta->pdy * 1.5 ;
-			beta->shift_y -= beta->pdx*1.5;
-			// beta->shift_x = beta->pdx * 1.5;
-		}
+		// if (keycode == 0  && check_wall(beta, keycode) == 0 )
+		// {
+		// 	beta->shift_x -= beta->pdy * 1.5 ;
+		// 	beta->shift_y += beta->pdx*1.5;
+		// 	// beta->shift_x = beta->pdx * 1.5;
+		// }
+		// if (keycode == 2  && check_wall(beta, keycode) == 0)
+		// {
+		// 	beta->shift_x += beta->pdy * 1.5 ;
+		// 	beta->shift_y -= beta->pdx*1.5;
+		// 	// beta->shift_x = beta->pdx * 1.5;
+		// }
 	 if (keycode == 124)
 		{
 			beta->_const += 0.1;
