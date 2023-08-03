@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 11:44:15 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 13:30:28 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,22 @@ int	key_hook(int keycode, t_beta *beta)
 	return(0);
 }
 
+int	mouse_hook(int x, int y, t_beta *beta)
+{
 
+		if (x < 0 || x > screenWidth)
+			return(0);
+			beta->_const = (x * 2*PI) / screenWidth;
+			beta->pdx = cos(beta->_const);
+			beta->pdy = sin(beta->_const);
+		mlx_clear_window(beta->mlx, beta->win);
+		bzero(beta->image3D.addr, sizeof(int)*(screenWidth) * screenHeight );
+		backgrand(beta);
+		randring(beta);
+		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
+		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+		return(0);
+}
 
 
 
@@ -357,6 +372,7 @@ int	ft_init(t_beta *beta, char *arg)
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
 	mlx_key_hook(beta->win, key_hook, beta);
 	mlx_hook(beta->win, 2, 0, key_hook, beta);
+	mlx_hook(beta->win, 6, 0L, mouse_hook, beta);
 	mlx_loop(beta->mlx);
 	return (0);
 }
