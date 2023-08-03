@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 17:30:33 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 20:48:09 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,6 +369,9 @@ int	ft_init(t_beta *beta, char *arg)
 {
 	// parse_map(beta, arg);
 	t_map_s	*first = littel_world(arg);
+	// while (1)
+	// 	;
+	
 	if (first == NULL)
 		return (1);
 	beta->mlx = mlx_init();
@@ -392,7 +395,7 @@ int	ft_init(t_beta *beta, char *arg)
 	beta->map->map = first->map;
 	beta->map->width = first->width ;
 	beta->map->height = first->height;
-	print_map_s(first);
+	// print_map_s(first);
 	// randring(beta);
 	key_hook(99999, beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
