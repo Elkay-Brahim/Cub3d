@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/03 11:18:13 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 13:25:44 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void    draw_wall(t_beta *beta)
     float ca;
 
     ca = beta->_const - beta->__angle_start;
-    printf("---------- %f\n", (beta->__angle_start * 180)/PI);
+    // printf("---------- %f\n", (beta->__angle_start * 180)/PI);
 
     if (ca < 0)
         ca += 2*PI;
