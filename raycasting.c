@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 10:50:17 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 12:09:20 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	_dda(t_beta *beta)
 void raycasting(t_beta *beta)
 {
 	int __j;
+	int	door;
 	beta->wall_x = 0;
 	beta->_angle = beta->_const;
 	beta->__angle_start = beta->_const - 0.523598776;
@@ -54,7 +55,7 @@ void raycasting(t_beta *beta)
 	}
 	while (beta->__angle_start <= beta->__angle_end && beta->wall_x < screenWidth)
 	{
-
+		door = 0;
 		//-------fold of vew
 		if (beta->__angle_start <= beta->_const)
 		 {
@@ -94,9 +95,14 @@ void raycasting(t_beta *beta)
 				break;
 			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
 			{
-				if (beta->map->map[beta->y][beta->i] == 3)
+				if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
+				{
 					beta->new_des_x = beta->new_des_x;
-				break;
+					door = 2;
+					break;
+				}
+				if (beta->map->map[beta->y][beta->i] == 1 )
+					break;
 			}
 			if (beta->map->map[beta->y][beta->i] == 0)
 			{
@@ -145,9 +151,14 @@ void raycasting(t_beta *beta)
 				break;
 			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
 			{
-				if (beta->map->map[beta->y][beta->i] == 3)
+				if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
+				{
 					beta->new_des_y = beta->new_des_y;
-				break;
+					door = 1;
+					break;
+				}
+				if (beta->map->map[beta->y][beta->i] == 1)
+					break;
 			}
 			if (beta->map->map[beta->y][beta->i] == 0)
 			{
@@ -186,6 +197,8 @@ void raycasting(t_beta *beta)
 				beta->textur_i = 2;
 			else
 				beta->textur_i = 0;
+			if (door == 2)
+				beta->textur_i = 4;
 		}
 		else
 		{
@@ -195,6 +208,8 @@ void raycasting(t_beta *beta)
 				beta->textur_i = 1;
 			else
 				beta->textur_i = 3;
+			if (door == 1)
+				beta->textur_i = 4;
 		}
 		beta->intersect_x = ((beta->pos_px - beta->_pdx * beta->__des));
 		beta->intersect_y = ((beta->pos_py - beta->_pdy * beta->__des));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:07 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/02 16:42:42 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:32:38 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ void    final_map(t_map_s *map, char **line)
                         map->map[i][tmp] = 3;
                     else if (line[j][tmp] && line[j][tmp] == map->direction)
                     {
-                        map->map[i][tmp] = 5;
+                        map->map[i][tmp] = 0;
                         map->player_x = tmp;
                         map->player_y = i;
                     }

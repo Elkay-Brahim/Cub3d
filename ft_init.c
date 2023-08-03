@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 10:50:52 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 11:44:15 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,15 @@ void	ft_textur(t_beta *beta, t_map_s *map)
 	int i;
 
 	i = 0;
-	beta->textur_path = calloc(sizeof(char *), 4);
+	beta->textur_path = calloc(sizeof(char *), 5);
 	beta->textur_path[0] = strdup(map->w_path);
 	beta->textur_path[1] = strdup(map->n_path);
 	beta->textur_path[2] = strdup(map->e_path);
 	beta->textur_path[3] = strdup(map->s_path);
-	beta->textur = calloc(sizeof(t_map), 4);
+	beta->textur_path[4] = strdup("./door.xpm");
+	beta->textur = calloc(sizeof(t_map), 5);
 	
-	while(i < 4)
+	while(i < 5)
 	{
 		beta->textur[i] = read_textur_map(beta->mlx, beta->textur_path[i]);
 		i++;
@@ -241,7 +242,7 @@ int check_wall(t_beta *beta, int keycode)
 	}
 
 
-	if (beta->map->map[y][x] != 1 && beta->map->map[y1][x1] != 1)
+	if ((beta->map->map[y][x] == 0 && beta->map->map[y1][x1] == 0) || ( beta->door == false && beta->map->map[y][x] != 1 && beta->map->map[y1][x1] != 1))
 		return(0);
 	
 	return(-1);
@@ -251,6 +252,12 @@ int check_wall(t_beta *beta, int keycode)
 int	key_hook(int keycode, t_beta *beta)
 {
 	int b = 0;
+		if (keycode == 126)
+		{
+				beta->door = true;
+		}
+		if (keycode == 125)
+			beta->door = false;
 		if (keycode == 99999)
 		{
 			beta->pdx = cos(30 * 0.0174532925);
@@ -323,6 +330,9 @@ int	ft_init(t_beta *beta, char *arg)
 	if (first == NULL)
 		return (1);
 	beta->_const = first->direction * 0.0174532925;
+	beta->door = true;
+	beta->player_x = first->player_x;
+	beta->player_y = first->player_y;
 	beta->pdx = cos(beta->_const);
 	beta->pdy = sin(beta->_const);
 	beta->i = 00, beta->y = 0, beta->shift_x = 0, beta->shift_y = 0;

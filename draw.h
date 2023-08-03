@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:48 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/07/29 17:16:11 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:15:01 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_beta{
 	float shfit_x;
 	float shfit_y;
 	float pdx;
-
+	
 	t_map_textur *txr_x;
 	t_map_textur *txr_y;
 	t_map_textur *door;

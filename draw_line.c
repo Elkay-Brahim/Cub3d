@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/03 10:49:10 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 11:18:13 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,13 @@ void    draw_wall(t_beta *beta)
     float ca;
 
     ca = beta->_const - beta->__angle_start;
+    printf("---------- %f\n", (beta->__angle_start * 180)/PI);
+
     if (ca < 0)
         ca += 2*PI;
     if (ca > 2*PI)
         ca -= 2*PI;
-    beta->__des = beta->__des * cos(ca);
+    beta->__des = (beta->__des * cos(ca));
     p1.x = beta->wall_x;
     p2.x = beta->wall_x;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 18:23:26 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:17:06 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 #include <string.h> // must be remouv
 #include <unistd.h> // must be remouv
 #include <stdio.h> // must be remouv
+#include <stdbool.h> // check after push
 
 typedef struct s_data {
 	void	*img;
@@ -87,6 +88,7 @@ typedef struct s_beta
 	float dy;
 	//-------keyhook-----
 	int index;
+	bool door;
 	
 	float	shift_x;
 	float	shift_y;
