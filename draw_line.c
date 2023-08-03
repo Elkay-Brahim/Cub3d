@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/02 18:32:00 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 20:19:12 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,16 +82,28 @@ void    draw_wall(t_beta *beta)
     float ca;
 
     ca = beta->_const - beta->__angle_start;
+    printf("---------- %f\n", (beta->__angle_start * 180)/PI);
+
     if (ca < 0)
         ca += 2*PI;
     if (ca > 2*PI)
         ca -= 2*PI;
-    beta->__des = beta->__des * cos(ca);
+    beta->__des = (beta->__des * cos(ca));
     p1.x = beta->wall_x;
     p2.x = beta->wall_x;
 
-    p2.y = ((B * WALL) / beta->__des);
-    // printf("distance :%f\n", beta->__des);
+    // if (beta->__des < 1)
+    // {
+    //     if (beta->__des < 0)
+    //         beta->__des = beta->__des * -1;
+    //     else
+    //        beta->__des = 1; 
+    // }
+    // else
+        p2.y = ((B * WALL) / beta->__des);
+		 printf("distance :%f\n", p2.y);
+    
+   
     middel = p2.y / 2;
     p1.y = (screenHeight / 2) - middel;
     p2.y = screenHeight / 2 + middel;

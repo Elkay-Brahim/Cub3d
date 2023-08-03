@@ -1,6 +1,6 @@
 NO ./shado.xpm
 SO ./wall.xpm
-WE ./wall_big.xpm
+WE ./door.xpm
 EA ./test.xpm
 
 F 122,157,84

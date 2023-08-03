@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 18:55:52 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/02 20:20:17 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,13 @@ void raycasting(t_beta *beta)
 				break;
 			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
 			{
-				if (beta->map->map[beta->y][beta->i] == 3)
+				if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
+				{
 					beta->new_des_x = beta->new_des_x;
-				break;
+					break;
+				}
+				if (beta->map->map[beta->y][beta->i] == 1 )
+					break;
 			}
 			if (beta->map->map[beta->y][beta->i] == 0)
 			{
@@ -145,9 +149,13 @@ void raycasting(t_beta *beta)
 				break;
 			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
 			{
-				if (beta->map->map[beta->y][beta->i] == 3)
+				if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
+				{
 					beta->new_des_y = beta->new_des_y;
-				break;
+					break;
+				}
+				if (beta->map->map[beta->y][beta->i] == 1 )
+					break;
 			}
 			if (beta->map->map[beta->y][beta->i] == 0)
 			{
@@ -201,7 +209,6 @@ void raycasting(t_beta *beta)
 
 		//---dda
 		_dda(beta);
-		// printf("beta->wall %f\n", beta->wall_x);
 		draw_wall(beta);
 		beta->wall_x += 1;
 	}
