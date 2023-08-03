@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 18:58:19 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 10:50:52 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,6 @@ int	color(t_beta *beta, int y, int i)
 		color = 0x00a86b;
 	else if (beta->map->map[y][i] == 3)
 		color = 0xfff000;
-	// else if (beta->map->map[y][i] == 3)
-	// 	color = 0x0000ff;
 	else
 		color = 0x000000;
 	return (color);

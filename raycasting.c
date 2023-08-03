@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/02 18:55:52 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 10:50:17 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void raycasting(t_beta *beta)
 		beta->__angle_start = beta->_const + 5.75958653;
 		beta->__angle_end = beta->_const + 6.28318531 + 0.523598776;
 	}
-	while (beta->__angle_start <= beta->__angle_end)
+	while (beta->__angle_start <= beta->__angle_end && beta->wall_x < screenWidth)
 	{
 
 		//-------fold of vew
@@ -201,7 +201,6 @@ void raycasting(t_beta *beta)
 
 		//---dda
 		_dda(beta);
-		// printf("beta->wall %f\n", beta->wall_x);
 		draw_wall(beta);
 		beta->wall_x += 1;
 	}
