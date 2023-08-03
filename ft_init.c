@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 11:44:15 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 17:05:36 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_textur(t_beta *beta, t_map_s *map)
 	beta->textur_path[1] = strdup(map->n_path);
 	beta->textur_path[2] = strdup(map->e_path);
 	beta->textur_path[3] = strdup(map->s_path);
-	beta->textur_path[4] = strdup("./door.xpm");
+	beta->textur_path[4] = strdup("./texturs/door_1.xpm");
 	beta->textur = calloc(sizeof(t_map), 5);
 	
 	while(i < 5)
@@ -254,10 +254,13 @@ int	key_hook(int keycode, t_beta *beta)
 	int b = 0;
 		if (keycode == 126)
 		{
-				beta->door = true;
+			beta->door = true;
 		}
 		if (keycode == 125)
+		{
 			beta->door = false;
+			time(&beta->start_time);
+		}
 		if (keycode == 99999)
 		{
 			beta->pdx = cos(30 * 0.0174532925);
@@ -319,7 +322,32 @@ int	key_hook(int keycode, t_beta *beta)
 }
 
 
-
+int	close_door(t_beta *beta)
+{
+	time_t	current_time;
+	
+	if(beta->door == false)
+	{
+		time(&current_time);
+		if (current_time - beta->start_time >= 3)
+		{
+			if (beta->map->map[(int)(beta->pos_py/B)][(int)(beta->pos_px/B)] == 3)
+				time(&beta->start_time);
+			else
+			{
+				beta->door = true;
+				mlx_clear_window(beta->mlx, beta->win);
+				bzero(beta->image3D.addr, sizeof(int)*(screenWidth) * screenHeight );
+				backgrand(beta);
+				randring(beta);
+				mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
+				mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+			}
+		}
+	}
+	
+	return (0);
+}
 
 
 
@@ -329,22 +357,22 @@ int	ft_init(t_beta *beta, char *arg)
 	t_map_s	*first = littel_world(arg);
 	if (first == NULL)
 		return (1);
-	beta->_const = first->direction * 0.0174532925;
-	beta->door = true;
-	beta->player_x = first->player_x;
-	beta->player_y = first->player_y;
-	beta->pdx = cos(beta->_const);
-	beta->pdy = sin(beta->_const);
-	beta->i = 00, beta->y = 0, beta->shift_x = 0, beta->shift_y = 0;
 	beta->mlx = mlx_init();
 	beta->win = mlx_new_window(beta->mlx, screenWidth, screenHeight, "CUB3D");
 	beta->image.img = mlx_new_image(beta->mlx, B*first->width, B*first->height);
 	beta->image.addr = mlx_get_data_addr(beta->image.img, &beta->image.bits_per_pixel, &beta->image.line_length, &beta->image.endian);
 	beta->image3D.img = mlx_new_image(beta->mlx, screenWidth , screenHeight);
 	beta->image3D.addr = mlx_get_data_addr(beta->image3D.img, &beta->image3D.bits_per_pixel, &beta->image3D.line_length, &beta->image3D.endian);
-	ft_textur(beta, first);
+	beta->_const = first->direction * 0.0174532925;
+	beta->player_x = first->player_x;
+	beta->player_y = first->player_y;
 	beta->f_color = first->f_color;
 	beta->c_color = first->c_color;
+	beta->door = true;
+	beta->pdx = cos(beta->_const);
+	beta->pdy = sin(beta->_const);
+	beta->i = 00, beta->y = 0, beta->shift_x = 0, beta->shift_y = 0;
+	ft_textur(beta, first);
 	backgrand(beta);
 	beta->map = calloc(sizeof(t_map), 1);
 	beta->map->map = first->map;
@@ -357,6 +385,7 @@ int	ft_init(t_beta *beta, char *arg)
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
 	mlx_key_hook(beta->win, key_hook, beta);
 	mlx_hook(beta->win, 2, 0, key_hook, beta);
+	mlx_loop_hook(beta->mlx, close_door, beta);
 	mlx_loop(beta->mlx);
 	return (0);
 }

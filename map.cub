@@ -1,10 +1,10 @@
-NO ./shado.xpm
-SO ./wall.xpm
-WE ./med.xpm
-EA ./test.xpm
+NO texturs/blue_light.xpm
+SO texturs/blue_dark.xpm
+EA texturs/purpel_light.xpm
+WE texturs/purpel_dark.xpm
 
-F 122,157,84
-C 140,192,222
+F 44,36,64
+C 14,27,41
 
         1111111111111111111111111
         1000000000110000000000001

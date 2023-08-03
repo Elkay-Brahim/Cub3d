@@ -1,10 +1,10 @@
-NO ./path_to_the_north_texture.xpm
-SO ./path_to_the_south_texture.xpm
-WE ./path_to_the_west_texture.xpm
-EA ./path_to_the_east_texture.xpm
+NO texturs/blue_light.xpm
+SO texturs/blue_dark.xpm
+EA texturs/purpel_light.xpm
+WE texturs/purpel_dark.xpm
 
-F 220,100,0
-C 255,255,255
+F 44,36,64
+C 14,27,41
 
 11111111111111111
 10000000000000011
