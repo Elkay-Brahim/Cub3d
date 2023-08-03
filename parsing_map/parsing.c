@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:07 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/02 19:32:38 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/03 17:25:33 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int    check_path(t_map_s *map, char **sp)
             map->w_path = ft_strdup(sp[1]);
         else if (sp[0][0] == 'E' && sp[0][1] == 'A' && !map->e_path)
             map->e_path = ft_strdup(sp[1]);
+        else if (sp[0][0] == 'D' && sp[0][1] == 'T' && !map->door)
+            map->door = ft_strdup(sp[1]);
         else
         {
             write(2, "invalid path identifier\n", 24);
@@ -129,10 +131,12 @@ int check_data(t_map_s *map)
     int fd;
     
     if (map->n_path == NULL || map->s_path == NULL || map->w_path == NULL ||\
-        map->e_path == NULL || map->f_color == -2 || map->c_color == -2)
+        map->e_path == NULL || map->f_color == -2 || map->door == NULL ||\
+        map->c_color == -2)
         return (1);
     if (check_ext(map->n_path, ".xpm") == 1 || check_ext(map->s_path, ".xpm") == 1 ||\
-        check_ext(map->w_path, ".xpm") == 1 || check_ext(map->e_path, ".xpm") == 1)
+        check_ext(map->w_path, ".xpm") == 1 || check_ext(map->e_path, ".xpm") == 1 ||\
+        check_ext(map->door, ".xpm") == 1)
         return (1);
     fd = open(map->n_path, O_RDONLY);
     if (fd == -1)
@@ -145,7 +149,12 @@ int check_data(t_map_s *map)
     fd = open(map->w_path, O_RDONLY);
     if (fd == -1)
         return (1);
+    close (fd);
     fd = open(map->e_path, O_RDONLY);
+    if (fd == -1)
+        return (1);
+    close (fd);
+    fd = open(map->door, O_RDONLY);
     if (fd == -1)
         return (1);
     close (fd);

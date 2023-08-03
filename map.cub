@@ -2,6 +2,7 @@ NO ./texturs/1.xpm
 SO ./texturs/2.xpm
 WE ./texturs/3.xpm
 EA ./texturs/4.xpm
+DT ./texturs/door_1.xpm
 
 F 44,36,64
 C 14,27,41

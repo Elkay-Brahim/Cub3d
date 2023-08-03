@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:23 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/02 10:07:13 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 17:23:17 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_parsing_map
     char    *s_path;
     char    *w_path;
     char    *e_path;
+    char    *door;
 	int     width;
 	int     height;
     int     player_x;

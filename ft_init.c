@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 17:11:34 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/03 17:30:33 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_textur(t_beta *beta, t_map_s *map)
 	beta->textur_path[1] = strdup(map->n_path);
 	beta->textur_path[2] = strdup(map->e_path);
 	beta->textur_path[3] = strdup(map->s_path);
-	beta->textur_path[4] = strdup("./texturs/door_1.xpm");
+	beta->textur_path[4] = strdup(map->door);
 	beta->textur = calloc(sizeof(t_map), 5);
 	
 	while(i < 5)
@@ -252,7 +252,7 @@ int check_wall(t_beta *beta, int keycode)
 int	key_hook(int keycode, t_beta *beta)
 {
 	int b = 0;
-		if (keycode == 126)
+		if (keycode == 126 && beta->map->map[(int)(beta->pos_py / B)][(int)(beta->pos_px / B)] != 3)
 		{
 			beta->door = true;
 		}
