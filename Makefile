@@ -2,7 +2,7 @@ NAME = cub3d
 
 HEADER = parsing_map/parsing.h parsing_map/get_next_line/get_next_line.h cub3d.h
 
-SRC = ft_init.c draw_line.c raycasting.c $(addprefix parsing_map/, parsing.c get_data_map.c \
+SRC = ft_init.c draw_line.c raycasting.c $(addprefix parsing_map/, parsing.c get_data_map.c get_map_element.c get_map.c get_world.c final_map.c\
 								$(addprefix get_next_line/, get_next_line.c get_next_line_utils.c)\
 								$(addprefix utils/, ft_strlen.c ft_split.c ft_calloc.c ft_bzero.c ft_strchr.c ft_strdup.c \
 									ft_substr.c ft_atoi.c ft_strjoin.c))
@@ -15,7 +15,7 @@ CC = cc
 CFLAGS = 
 
 $(NAME) : $(OBJ) $(HEADER) 
-		$(CC) $(CFLAGS) $(SRC) -lmlx -framework OpenGL -framework AppKit  -fsanitize=address -g -o $(NAME) 
+		$(CC) $(CFLAGS) $(SRC) -lmlx -framework OpenGL -framework AppKit   -o $(NAME) 
 
 all : $(NAME)
 

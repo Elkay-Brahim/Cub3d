@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 10:25:06 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 11:53:46 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,7 +313,7 @@ int	key_hook(int keycode, t_beta *beta)
 	backgrand(beta);
 	randring(beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 	return(0);
 }
 int	close_door(t_beta *beta)
@@ -335,7 +335,7 @@ int	close_door(t_beta *beta)
 				backgrand(beta);
 				randring(beta);
 				mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-				mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+				mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 			}
 		}
 	}
@@ -355,7 +355,7 @@ int	mouse_hook(int x, int y, t_beta *beta)
 	backgrand(beta);
 	randring(beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 	return(0);
 }
 
@@ -382,6 +382,8 @@ void init_beta(t_beta *beta, t_map_s *first)
 
 int	ft_init(t_beta *beta, t_map_s *first)
 {
+	float x;
+	float y;
 	beta->mlx = mlx_init();
 	beta->win = mlx_new_window(beta->mlx, screenWidth, screenHeight, "CUB3D");
 	beta->image.img = mlx_new_image(beta->mlx, B * first->width, B * first->height);
@@ -392,7 +394,7 @@ int	ft_init(t_beta *beta, t_map_s *first)
 	backgrand(beta);
 	key_hook(99999, beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 	mlx_key_hook(beta->win, key_hook, beta);
 	mlx_hook(beta->win, 2, 0, key_hook, beta);
 	mlx_loop_hook(beta->mlx, close_door, beta);
