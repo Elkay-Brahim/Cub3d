@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 16:45:28 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 09:25:24 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,171 @@ void	_dda(t_beta *beta)
 	free(dda);
 }
 
-void raycasting(t_beta *beta)
+void fold_of_view(t_beta *beta)
 {
-	int __j;
-	int	door;
+	if (beta->__angle_start <= beta->_const)
+	 {
+		beta->__angle_start += ABR;
+		if(beta->__angle_start > 2 * PI)
+			beta->__angle_start -= 2 * PI;
+		beta->_pdx = cos(beta->__angle_start);
+		beta->_pdy = sin(beta->__angle_start);
+	 }
+	 else
+	 {
+		beta->__angle_start += ABR;
+		if (beta->__angle_start < 0)
+			beta->__angle_start += 2 * PI;
+		beta->_pdx = cos(beta->__angle_start);
+		beta->_pdy = sin(beta->__angle_start);
+	 }
+}
+
+void calcul_destance_x(t_beta *beta, int __j)
+{
+	if ((beta->__angle_start * 180)/PI > 90 && (beta->__angle_start * 180)/PI < 270)
+	{
+		beta->dx = beta->pos_px - (int)((beta->pos_px / B) + __j ) * B;
+		beta->new_des_x = (beta->dx / cos(beta->__angle_start)) + 0.001;
+	}
+	else
+	{
+		beta->dx = beta->pos_px - (int)((beta->pos_px / B) + 1 - __j) * B;
+		beta->new_des_x = (beta->dx / cos(beta->__angle_start)) + 0.001;
+	}
+}
+
+void calcul_destance_y(t_beta *beta, int __j)
+{
+	if (((beta->__angle_start * 180)/PI) > 180 && ((beta->__angle_start * 180)/PI) < 360)
+	{
+		beta->dy = beta->pos_py - (int)((beta->pos_py / B) + __j ) * B;
+		beta->new_des_y = (beta->dy / sin(beta->__angle_start)) + 0.001;
+	}
+	else
+	{
+		beta->dy = beta->pos_py - (int)((beta->pos_py / B) + 1 - __j)  * B;
+		beta->new_des_y = (beta->dy / sin(beta->__angle_start)) + 0.001;
+	}
+}
+
+void	get_destance(t_beta *beta)
+{
+	if (fabs(beta->new_des_x) < fabs(beta->new_des_y))
+	{
+		beta->__des = fabs(beta->new_des_x);
+		(beta->__des < 1) && (beta->__des = 1);
+		beta->inter_wall_side = WALL_SIDE_X;
+		if ((beta->__angle_start * 180)/PI > 90 && (beta->__angle_start * 180)/PI < 270)
+			beta->textur_i = 2;
+		else
+			beta->textur_i = 0;
+		if (beta->door_check == 2)
+			beta->textur_i = 4;
+	}
+	else
+	{
+		beta->__des = fabs(beta->new_des_y);
+		beta->inter_wall_side = WALL_SIDE_Y;
+		if (((beta->__angle_start * 180)/PI > 0 && (beta->__angle_start * 180)/PI < 180) || (beta->__angle_start * 180)/PI > 360)
+			beta->textur_i = 1;
+		else
+			beta->textur_i = 3;
+		if (beta->door_check == 1)
+			beta->textur_i = 4;
+	}
+	beta->intersect_x = ((beta->pos_px - beta->_pdx * beta->__des));
+	beta->intersect_y = ((beta->pos_py - beta->_pdy * beta->__des));
+}
+
+int	break_of_x(t_beta *beta)
+{
+	beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_x)/B);
+	beta->y = ((int)(beta->player_y*B+beta->shift_y - beta->_pdy * beta->new_des_x)/B);
+	if (beta->y <= 0 || beta->y > beta->map->height - 1 || beta->i <= 0 || beta->i > beta->map->width - 1)
+		return(-1);
+	if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
+	{
+		if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
+		{
+			beta->new_des_x = beta->new_des_x;
+			beta->door_check = 2;
+			return(-1);
+		}
+		if (beta->map->map[beta->y][beta->i] == 1 )
+			return(-1);
+	}
+	if (beta->map->map[beta->y][beta->i] == 0)
+	{
+		if (((beta->__angle_start * 180)/PI  > 0 && (beta->__angle_start * 180)/PI  < 90 )|| (beta->__angle_start * 180)/PI  > 360)
+		{
+			if ( beta->map->map[beta->y + 1][beta->i] == 1 && beta->map->map[beta->y][beta->i + 1] == 1)
+				return(-1);
+		}
+		else if ((beta->__angle_start * 180)/PI  > 90 && (beta->__angle_start * 180)/PI  < 180)
+		{
+			if ( beta->map->map[beta->y + 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
+				return(-1);
+		}
+		else if ((beta->__angle_start * 180)/PI  > 180 && (beta->__angle_start * 180)/PI  < 270)
+		{
+			if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
+				return(-1);
+		}
+		else if ((beta->__angle_start * 180)/PI  > 270 && (beta->__angle_start * 180)/PI  < 360)
+		{
+			if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i + 1] == 1)
+				return(-1);
+		}
+	}
+	return(1);
+}
+
+int	break_of_y(t_beta *beta)
+{
+	beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_y)/B);
+	beta->y = ((int)(beta->player_y*B+beta->shift_y - beta->_pdy * beta->new_des_y)/B);
+	if (beta->y <= 0 || beta->y > beta->map->height - 1 || beta->i <= 0 || beta->i > beta->map->width - 1)
+		return(-1);
+	if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
+	{
+		if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
+		{
+			beta->new_des_y = beta->new_des_y;
+			beta->door_check = 1;
+			return(-1);
+		}
+		if (beta->map->map[beta->y][beta->i] == 1)
+			return(-1);
+	}
+	if (beta->map->map[beta->y][beta->i] == 0)
+	{
+		if (((beta->__angle_start * 180)/PI  > 0 && (beta->__angle_start * 180)/PI  < 90 )|| (beta->__angle_start * 180)/PI  > 360)
+		{
+			if ( beta->map->map[beta->y + 1][beta->i] == 1 && beta->map->map[beta->y][beta->i + 1] == 1)
+				return(-1);
+		}
+		else if ((beta->__angle_start * 180)/PI  > 90 && (beta->__angle_start * 180)/PI  < 180)
+		{
+			if ( beta->map->map[beta->y + 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
+				return(-1);
+		}
+		else if ((beta->__angle_start * 180)/PI  > 180 && (beta->__angle_start * 180)/PI  < 270)
+		{
+			if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
+				return(-1);
+		}
+		else if ((beta->__angle_start * 180)/PI  > 270 && (beta->__angle_start * 180)/PI  < 360)
+		{
+			if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i + 1] == 1)
+				return(-1);
+		}
+	}
+	return(1);
+}
+
+void	init_env_racasting(t_beta *beta)
+{
 	beta->wall_x = 0;
 	beta->_angle = beta->_const;
 	beta->__angle_start = beta->_const - 0.523598776;
@@ -53,168 +214,34 @@ void raycasting(t_beta *beta)
 		beta->__angle_start = beta->_const + 5.75958653;
 		beta->__angle_end = beta->_const + 6.28318531 + 0.523598776;
 	}
+	return;
+}
+
+void raycasting(t_beta *beta)
+{
+	int __j;
+	init_env_racasting(beta);
 	while (beta->__angle_start <= beta->__angle_end && beta->wall_x < screenWidth)
 	{
-		door = 0;
-		//-------fold of vew
-		if (beta->__angle_start <= beta->_const)
-		 {
-			beta->__angle_start += ABR;
-			if(beta->__angle_start > 2 * PI)
-				beta->__angle_start -= 2 * PI;
-			beta->_pdx = cos(beta->__angle_start);
-			beta->_pdy = sin(beta->__angle_start);
-		 }
-		 else
-		 {
-			beta->__angle_start += ABR;
-			if (beta->__angle_start < 0)
-				beta->__angle_start += 2 * PI;
-			beta->_pdx = cos(beta->__angle_start);
-			beta->_pdy = sin(beta->__angle_start);
-		 }
-
-		 //-----calcul destance of x
+		beta->door_check = 0;
+		fold_of_view(beta);
 		 __j = 1;
 		 while(1)
 		 {
-			if ((beta->__angle_start * 180)/PI > 90 && (beta->__angle_start * 180)/PI < 270)
-			{
-				beta->dx = beta->pos_px - (int)((beta->pos_px / B) + __j ) * B;
-				beta->new_des_x = (beta->dx / cos(beta->__angle_start)) + 0.001;
-			}
-			else
-			{
-				beta->dx = beta->pos_px - (int)((beta->pos_px / B) + 1 - __j) * B;
-				beta->new_des_x = (beta->dx / cos(beta->__angle_start)) + 0.001;
-			}
-			//----breaks of x
-			beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_x)/B);
-			beta->y = ((int)(beta->player_y*B+beta->shift_y - beta->_pdy * beta->new_des_x)/B);
-			if (beta->y <= 0 || beta->y > beta->map->height - 1 || beta->i <= 0 || beta->i > beta->map->width - 1)
+			calcul_destance_x(beta , __j);
+			if (break_of_x(beta) == -1)
 				break;
-			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
-			{
-				if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
-				{
-					beta->new_des_x = beta->new_des_x;
-					door = 2;
-					break;
-				}
-				if (beta->map->map[beta->y][beta->i] == 1 )
-					break;
-			}
-			if (beta->map->map[beta->y][beta->i] == 0)
-			{
-				if (((beta->__angle_start * 180)/PI  > 0 && (beta->__angle_start * 180)/PI  < 90 )|| (beta->__angle_start * 180)/PI  > 360)
-				{
-					if ( beta->map->map[beta->y + 1][beta->i] == 1 && beta->map->map[beta->y][beta->i + 1] == 1)
-						break;
-				}
-				else if ((beta->__angle_start * 180)/PI  > 90 && (beta->__angle_start * 180)/PI  < 180)
-				{
-					if ( beta->map->map[beta->y + 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
-						break;
-				}
-				else if ((beta->__angle_start * 180)/PI  > 180 && (beta->__angle_start * 180)/PI  < 270)
-				{
-					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
-						break;
-				}
-				else if ((beta->__angle_start * 180)/PI  > 270 && (beta->__angle_start * 180)/PI  < 360)
-				{
-					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i + 1] == 1)
-						break;
-				}
-			}
-			
 			__j++;
 		 }
-		 //-----calcul destance of y
 		 __j = 1;
 		 while(1)
 		 {
-			if (((beta->__angle_start * 180)/PI) > 180 && ((beta->__angle_start * 180)/PI) < 360)
-			{
-				beta->dy = beta->pos_py - (int)((beta->pos_py / B) + __j ) * B;
-				beta->new_des_y = (beta->dy / sin(beta->__angle_start)) + 0.001;
-			}
-			else
-			{
-				beta->dy = beta->pos_py - (int)((beta->pos_py / B) + 1 - __j)  * B;
-				beta->new_des_y = (beta->dy / sin(beta->__angle_start)) + 0.001;
-			}
-			//----breaks of y
-			beta->i = ((int)(beta->player_x*B+beta->shift_x - beta->_pdx * beta->new_des_y)/B);
-			beta->y = ((int)(beta->player_y*B+beta->shift_y - beta->_pdy * beta->new_des_y)/B);
-			if (beta->y <= 0 || beta->y > beta->map->height - 1 || beta->i <= 0 || beta->i > beta->map->width - 1)
+			calcul_destance_y(beta, __j);
+			if(break_of_y(beta) == -1)
 				break;
-			if (beta->map->map[beta->y][beta->i] == 1 || beta->map->map[beta->y][beta->i] == 3)
-			{
-				if (beta->map->map[beta->y][beta->i] == 3 && beta->door == true)
-				{
-					beta->new_des_y = beta->new_des_y;
-					door = 1;
-					break;
-				}
-				if (beta->map->map[beta->y][beta->i] == 1)
-					break;
-			}
-			if (beta->map->map[beta->y][beta->i] == 0)
-			{
-				if (((beta->__angle_start * 180)/PI  > 0 && (beta->__angle_start * 180)/PI  < 90 )|| (beta->__angle_start * 180)/PI  > 360)
-				{
-					if ( beta->map->map[beta->y + 1][beta->i] == 1 && beta->map->map[beta->y][beta->i + 1] == 1)
-						break;
-				}
-				else if ((beta->__angle_start * 180)/PI  > 90 && (beta->__angle_start * 180)/PI  < 180)
-				{
-					if ( beta->map->map[beta->y + 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
-						break;
-				}
-				else if ((beta->__angle_start * 180)/PI  > 180 && (beta->__angle_start * 180)/PI  < 270)
-				{
-					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i-1] == 1)
-						break;
-				}
-				else if ((beta->__angle_start * 180)/PI  > 270 && (beta->__angle_start * 180)/PI  < 360)
-				{
-					if ( beta->map->map[beta->y - 1][beta->i] == 1  && beta->map->map[beta->y][beta->i + 1] == 1)
-						break;
-				}
-			}
 			__j++;
 		 }
-
-		 //----get min destance and intersection
-		if (fabs(beta->new_des_x) < fabs(beta->new_des_y))
-		{
-			beta->__des = fabs(beta->new_des_x);
-			if (beta->__des < 1)
-				beta->__des = 1;
-			beta->inter_wall_side = WALL_SIDE_X;
-			if ((beta->__angle_start * 180)/PI > 90 && (beta->__angle_start * 180)/PI < 270)
-				beta->textur_i = 2;
-			else
-				beta->textur_i = 0;
-			if (door == 2)
-				beta->textur_i = 4;
-		}
-		else
-		{
-			beta->__des = fabs(beta->new_des_y);
-			beta->inter_wall_side = WALL_SIDE_Y;
-			if (((beta->__angle_start * 180)/PI > 0 && (beta->__angle_start * 180)/PI < 180) || (beta->__angle_start * 180)/PI > 360)
-				beta->textur_i = 1;
-			else
-				beta->textur_i = 3;
-			if (door == 1)
-				beta->textur_i = 4;
-		}
-		beta->intersect_x = ((beta->pos_px - beta->_pdx * beta->__des));
-		beta->intersect_y = ((beta->pos_py - beta->_pdy * beta->__des));
-
-		//---dda
+		 get_destance(beta);
 		_dda(beta);
 		draw_wall(beta);
 		beta->wall_x += 1;
