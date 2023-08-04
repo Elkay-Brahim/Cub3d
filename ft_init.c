@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 11:53:46 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 12:09:33 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,6 +293,17 @@ void mouvement(t_beta *beta, int keycode)
 	}
 }
 
+void esc(t_beta *beta, int keycode)
+{
+	(void)beta;
+	if (keycode == 53)
+	{
+		ft_free_all(beta);
+		mlx_destroy_window(beta->mlx, beta->win);
+		exit(0);
+	}
+	return (0);
+}
 int	key_hook(int keycode, t_beta *beta)
 {
 	int b = 0;
@@ -306,6 +317,7 @@ int	key_hook(int keycode, t_beta *beta)
 		beta->pdx = cos(beta->_const);
 		beta->pdy = sin(beta->_const);
 	}
+	esc(beta, keycode)
 	mouvement(beta, keycode);
 	_fold_of_view(beta, keycode);
 	mlx_clear_window(beta->mlx, beta->win);
