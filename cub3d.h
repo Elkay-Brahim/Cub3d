@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 15:03:57 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/04 11:21:51 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ typedef struct s_dda
 	float	dx;
 	float	dy;
 	float	max;
-	float	x;
-	float	y;
+	// float	x;
+	// float	y;
 	
 	int		m_x;
 	int		m_y;
