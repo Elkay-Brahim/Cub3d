@@ -6,7 +6,7 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 11:21:51 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/04 12:25:35 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct s_beta
 	float dy;
 	time_t	current_time;
 	time_t	start_time;
+	int		door_check;
 	//-------keyhook-----
 	int index;
 	bool door;
@@ -103,6 +104,13 @@ typedef struct s_beta
 	
 	char	**textur_path;
 }		t_beta;
+
+typedef struct s_cord
+{
+    float x;
+    float y;
+    int color;
+}              t_cord;
 
 typedef struct s_dda
 {

@@ -6,28 +6,11 @@
 /*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/03 20:48:09 by rrasezin         ###   ########.fr       */
+/*   Updated: 2023/08/04 12:16:36 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int worldMap[24][24] = {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
-  {1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,1},
-  {1,0,1,1,1,1,0,0,0,0,1,0,0,1,0,0,1},
-  {1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1},
-  {1,0,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1},
-  {1,0,1,0,0,2,0,0,0,0,1,0,0,0,0,0,1},
-  {1,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,1},
-  {1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,1,0,0,0,1,1,1,1,5,0,0,1,0,0,1},
-  {1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1},
-  {1,0,1,0,1,1,1,1,1,0,0,0,0,1,0,0,1},
-  {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
 
 int	get_color(t_data *data, int x, int y)
 {
@@ -144,15 +127,15 @@ void	draw_line(t_beta *beta, int i, int y, int x)
 
 void player_represent(t_beta *beta)
 {
-		int i = 0;
-		while(i < 10)
-		{
-			my_mlx_pixel_put(&beta->image, (((beta->player_x * B) + i) + beta->shift_x) - 5 , (((beta->player_y * B)) + beta->shift_y) - 5 , 0xff0000);
-			my_mlx_pixel_put(&beta->image, (((beta->player_x * B))+ beta->shift_x) - 5 ,(((beta->player_y * B) + i)+ beta->shift_y) - 5 , 0xff0000);
-			my_mlx_pixel_put(&beta->image, ((((beta->player_x * B) + 10) - i)+ beta->shift_x ) - 5,(((beta->player_y * B) + 10) + beta->shift_y) - 5, 0xff0000);
-			my_mlx_pixel_put(&beta->image, (((beta->player_x * B) + 10) + beta->shift_x) - 5 ,((((beta->player_y * B) + 10) - i) + beta->shift_y) -5, 0xff0000);
-			i++;
-		}
+	int i = 0;
+	while(i < 10)
+	{
+		my_mlx_pixel_put(&beta->image, (((beta->player_x * B) + i) + beta->shift_x) - 5 , (((beta->player_y * B)) + beta->shift_y) - 5 , 0xff0000);
+		my_mlx_pixel_put(&beta->image, (((beta->player_x * B))+ beta->shift_x) - 5 ,(((beta->player_y * B) + i)+ beta->shift_y) - 5 , 0xff0000);
+		my_mlx_pixel_put(&beta->image, ((((beta->player_x * B) + 10) - i)+ beta->shift_x ) - 5,(((beta->player_y * B) + 10) + beta->shift_y) - 5, 0xff0000);
+		my_mlx_pixel_put(&beta->image, (((beta->player_x * B) + 10) + beta->shift_x) - 5 ,((((beta->player_y * B) + 10) - i) + beta->shift_y) -5, 0xff0000);
+		i++;
+	}
 }
 
 void	randring(t_beta *beta)
@@ -202,20 +185,19 @@ void backgrand(t_beta *beta)
 	}
 	return;
 }
-
-int check_wall(t_beta *beta, int keycode)
+int up_down(t_beta *beta, int keycode)
 {
 	int x;
 	int y;
 	int x1;
 	int y1;
+
 	if(keycode == 13)
 	{
 		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*3)/B));
 		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdy*3) / B));
 		x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdx*5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y - beta->pdy) / B));
-		
 	}
 	else if (keycode == 1)
 	{
@@ -224,13 +206,24 @@ int check_wall(t_beta *beta, int keycode)
 		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdx*5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdy) / B));
 	}
-	else if (keycode == 0)
+	if ((beta->map->map[y][x] == 0 && beta->map->map[y1][x1] == 0) || ( beta->door == false && beta->map->map[y][x] != 1 && beta->map->map[y1][x1] != 1))
+		return(0);
+	return (-1);
+}
+
+int left_right(t_beta *beta, int keycode)
+{
+	int x;
+	int y;
+	int x1;
+	int y1;
+
+	if (keycode == 0)
 	{
 		x = (int)(((beta->player_x * B + beta->shift_x - beta->pdy*3)/B));
 		y = (int)(((beta->player_y * B + beta->shift_y + beta->pdx*3) / B));
 		x1 = (int)(((beta->player_x * B + beta->shift_x - beta->pdy* 5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y + beta->pdx) / B));
-
 	}
 	else if (keycode == 2)
 	{
@@ -238,86 +231,89 @@ int check_wall(t_beta *beta, int keycode)
 		y = (int)(((beta->player_y * B + beta->shift_y - beta->pdx *3) / B));
 		x1 = (int)(((beta->player_x * B + beta->shift_x + beta->pdy * 5)/B));
 		y1 = (int)(((beta->player_y * B + beta->shift_y - beta->pdx ) / B));
-
 	}
-
-
 	if ((beta->map->map[y][x] == 0 && beta->map->map[y1][x1] == 0) || ( beta->door == false && beta->map->map[y][x] != 1 && beta->map->map[y1][x1] != 1))
 		return(0);
-	
-	return(-1);
+	return (-1);
 }
 
+void _fold_of_view(t_beta *beta, int keycode)
+{
+	if (keycode == 124)
+	{
+		beta->_const += 0.1;
+		if(beta->_const > 2 * PI)
+			beta->_const -= 2 * PI;
+		beta->pdx = cos(beta->_const);
+		beta->pdy = sin(beta->_const);
+	}
+	else if (keycode == 123)
+	{
+		beta->_const -= 0.1;
+		if (beta->_const < 0)
+			beta->_const += 2 * PI;
+		beta->pdx = cos(beta->_const) ;
+		beta->pdy = sin(beta->_const) ;
+	}
+}
+void check_state_door(t_beta *beta, int keycode)
+{
+	if (keycode == 126 && beta->map->map[(int)(beta->pos_py / B)][(int)(beta->pos_px / B)] != 3)
+	{
+		beta->door = true;
+	}
+	if (keycode == 125)
+	{
+		beta->door = false;
+		time(&beta->start_time);
+	}
+}
+
+void mouvement(t_beta *beta, int keycode)
+{
+	if (keycode == 13  && up_down(beta, keycode) == 0 )
+	{
+		beta->shift_y -= beta->pdy * 1.5;
+		beta->shift_x -= beta->pdx * 1.5;
+	}
+	if (keycode == 1 && up_down(beta, keycode) == 0)
+	{
+		beta->shift_y += beta->pdy* 1.5;
+		beta->shift_x += beta->pdx*1.5;
+	}
+	if (keycode == 0  && left_right(beta, keycode) == 0 )
+	{
+		beta->shift_x -= beta->pdy * 1.5 ;
+		beta->shift_y += beta->pdx*1.5;
+	}
+	if (keycode == 2  && left_right(beta, keycode) == 0)
+	{
+		beta->shift_x += beta->pdy * 1.5 ;
+		beta->shift_y -= beta->pdx*1.5;
+	}
+}
 
 int	key_hook(int keycode, t_beta *beta)
 {
 	int b = 0;
-		if (keycode == 126 && beta->map->map[(int)(beta->pos_py / B)][(int)(beta->pos_px / B)] != 3)
-		{
-			beta->door = true;
-		}
-		if (keycode == 125)
-		{
-			beta->door = false;
-			time(&beta->start_time);
-		}
-		if (keycode == 99999)
-		{
-			beta->pdx = cos(30 * 0.0174532925);
-			beta->pdy = sin(30 * 0.0174532925);
-			beta->shift_y += beta->pdy * 5;
-			beta->shift_x += beta->pdx * 5;
-			beta->pdx = cos(beta->_const) ;
-			beta->pdy = sin(beta->_const) ;
-		}
-		if (keycode == 13  && check_wall(beta, keycode) == 0 )
-		{
-
-			beta->shift_y -= beta->pdy * 1.5;
-			beta->shift_x -= beta->pdx * 1.5;
-		}
-		if (keycode == 1 && check_wall(beta, keycode) == 0)
-		{
-			beta->shift_y += beta->pdy* 1.5;
-			beta->shift_x += beta->pdx*1.5;
-
-		}
-		if (keycode == 0  && check_wall(beta, keycode) == 0 )
-		{
-			beta->shift_x -= beta->pdy * 1.5 ;
-			beta->shift_y += beta->pdx*1.5;
-			// beta->shift_x = beta->pdx * 1.5;
-		}
-		if (keycode == 2  && check_wall(beta, keycode) == 0)
-		{
-			beta->shift_x += beta->pdy * 1.5 ;
-			beta->shift_y -= beta->pdx*1.5;
-			// beta->shift_x = beta->pdx * 1.5;
-		}
-	 if (keycode == 124)
-		{
-			beta->_const += 0.1;
-			if(beta->_const > 2 * PI)
-				beta->_const -= 2 * PI;
-			beta->pdx = cos(beta->_const);
-			beta->pdy = sin(beta->_const);
-		}
-		else if (keycode == 123)
-		{
-			beta->_const -= 0.1;
-			if (beta->_const < 0)
-				beta->_const += 2 * PI;
-			beta->pdx = cos(beta->_const) ;
-			beta->pdy = sin(beta->_const) ;
-
-		}
-
-		mlx_clear_window(beta->mlx, beta->win);
-		bzero(beta->image3D.addr, sizeof(int)*(screenWidth) * screenHeight );
-		backgrand(beta);
-		randring(beta);
-		mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-		mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+	check_state_door(beta, keycode);
+	if (keycode == 99999)
+	{
+		beta->pdx = cos(30 * 0.0174532925);
+		beta->pdy = sin(30 * 0.0174532925);
+		beta->shift_y += beta->pdy * 5;
+		beta->shift_x += beta->pdx * 5;
+		beta->pdx = cos(beta->_const);
+		beta->pdy = sin(beta->_const);
+	}
+	mouvement(beta, keycode);
+	_fold_of_view(beta, keycode);
+	mlx_clear_window(beta->mlx, beta->win);
+	bzero(beta->image3D.addr, sizeof(int)*(screenWidth) * screenHeight );
+	backgrand(beta);
+	randring(beta);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 	return(0);
 }
 int	close_door(t_beta *beta)
@@ -339,7 +335,7 @@ int	close_door(t_beta *beta)
 				backgrand(beta);
 				randring(beta);
 				mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-				mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+				mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 			}
 		}
 	}
@@ -351,35 +347,20 @@ int	mouse_hook(int x, int y, t_beta *beta)
 {
 	if (x < 0 || x > screenWidth)
 		return(0);
-		beta->_const = (x * 2*PI) / screenWidth;
-		beta->pdx = cos(beta->_const);
-		beta->pdy = sin(beta->_const);
+	beta->_const = (x * 2*PI) / screenWidth;
+	beta->pdx = cos(beta->_const);
+	beta->pdy = sin(beta->_const);
 	mlx_clear_window(beta->mlx, beta->win);
 	bzero(beta->image3D.addr, sizeof(int)*(screenWidth) * screenHeight );
 	backgrand(beta);
 	randring(beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 	return(0);
 }
 
-
-
-int	ft_init(t_beta *beta, char *arg)
+void init_beta(t_beta *beta, t_map_s *first)
 {
-	// parse_map(beta, arg);
-	t_map_s	*first = littel_world(arg);
-	// while (1)
-	// 	;
-	
-	if (first == NULL)
-		return (1);
-	beta->mlx = mlx_init();
-	beta->win = mlx_new_window(beta->mlx, screenWidth, screenHeight, "CUB3D");
-	beta->image.img = mlx_new_image(beta->mlx, B*first->width, B*first->height);
-	beta->image.addr = mlx_get_data_addr(beta->image.img, &beta->image.bits_per_pixel, &beta->image.line_length, &beta->image.endian);
-	beta->image3D.img = mlx_new_image(beta->mlx, screenWidth , screenHeight);
-	beta->image3D.addr = mlx_get_data_addr(beta->image3D.img, &beta->image3D.bits_per_pixel, &beta->image3D.line_length, &beta->image3D.endian);
 	beta->_const = first->direction * 0.0174532925;
 	beta->player_x = first->player_x;
 	beta->player_y = first->player_y;
@@ -388,18 +369,32 @@ int	ft_init(t_beta *beta, char *arg)
 	beta->door = true;
 	beta->pdx = cos(beta->_const);
 	beta->pdy = sin(beta->_const);
-	beta->i = 00, beta->y = 0, beta->shift_x = 0, beta->shift_y = 0;
+	beta->i = 0;
+	beta->y = 0;
+	beta->shift_x = 0;
+	beta->shift_y = 0;
 	ft_textur(beta, first);
-	backgrand(beta);
 	beta->map = calloc(sizeof(t_map), 1);
 	beta->map->map = first->map;
 	beta->map->width = first->width ;
 	beta->map->height = first->height;
-	// print_map_s(first);
-	// randring(beta);
+}
+
+int	ft_init(t_beta *beta, t_map_s *first)
+{
+	float x;
+	float y;
+	beta->mlx = mlx_init();
+	beta->win = mlx_new_window(beta->mlx, screenWidth, screenHeight, "CUB3D");
+	beta->image.img = mlx_new_image(beta->mlx, B * first->width, B * first->height);
+	beta->image.addr = mlx_get_data_addr(beta->image.img, &beta->image.bits_per_pixel, &beta->image.line_length, &beta->image.endian);
+	beta->image3D.img = mlx_new_image(beta->mlx, screenWidth , screenHeight);
+	beta->image3D.addr = mlx_get_data_addr(beta->image3D.img, &beta->image3D.bits_per_pixel, &beta->image3D.line_length, &beta->image3D.endian);
+	init_beta(beta, first);
+	backgrand(beta);
 	key_hook(99999, beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->image3D.img, 0, 0);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B*14);
+	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img, 0, screenHeight - B * beta->map->height);
 	mlx_key_hook(beta->win, key_hook, beta);
 	mlx_hook(beta->win, 2, 0, key_hook, beta);
 	mlx_loop_hook(beta->mlx, close_door, beta);
@@ -411,7 +406,15 @@ int	ft_init(t_beta *beta, char *arg)
 int main(int ac, char **av)
 {
 	t_beta *beta;
-	
-	beta = calloc(sizeof(t_beta), 1);
-	return(ft_init(beta, av[1]));
+	if (ac == 2)
+	{
+		beta = calloc(sizeof(t_beta), 1);
+		t_map_s	*first = littel_world(av[1]);
+		if (first == NULL)
+			return (1);
+		ft_init(beta, first);
+	}
+	else
+		write(2, "Error\n", 6);
+	return(0);
 }
