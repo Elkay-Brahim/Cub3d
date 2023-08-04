@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 19:36:41 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 20:19:40 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ void	init_beta(t_beta *beta, t_map_s *first);
 int		up_down(t_beta *beta, int keycode);
 int		ray_effect_y(t_beta *beta, float angle, int **m);
 int		ray_effect_x(t_beta *beta, float angle, int **m);
-void	randring(t_beta *beta);
 void	player_represent(t_beta *beta);
 void	mouvement(t_beta *beta, int keycode);
 int		left_right(t_beta *beta, int keycode);
@@ -145,6 +144,6 @@ int		break_of_y(t_beta *beta);
 int		break_of_x(t_beta *beta);
 void	backgrand(t_beta *beta);
 void	_fold_of_view(t_beta *beta, int keycode);
-void	_dda(t_beta *beta);
+int		cross_window(t_beta *beta);
 
 #endif

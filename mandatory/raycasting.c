@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 18:49:33 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 19:18:17 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 20:07:06 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	raycasting(t_beta *beta, int __j)
 				break ;
 		}
 		get_destance(beta, (beta->__angle_start * 180) / PI);
-		_dda(beta);
 		draw_wall(beta);
 		beta->wall_x += 1;
 	}

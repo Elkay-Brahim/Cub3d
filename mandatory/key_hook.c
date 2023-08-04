@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 17:21:08 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 19:35:14 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 20:12:12 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,8 @@ int	key_hook(int keycode, t_beta *beta)
 	mouvement(beta, keycode);
 	_fold_of_view(beta, keycode);
 	mlx_clear_window(beta->mlx, beta->win);
-	bzero(beta->world.addr, sizeof(int) * (SCREENWIDTH) * SCREENHEIGHT);
 	backgrand(beta);
-	randring(beta);
+	raycasting(beta, 0);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->world.img, 0, 0);
-	mlx_put_image_to_window(beta->mlx, beta->win, beta->image.img,
-		0, SCREENHEIGHT - B * beta->map->height);
 	return (0);
 }

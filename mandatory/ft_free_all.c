@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 17:23:13 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 17:23:28 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 20:10:23 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_free_all(t_beta *beta)
 	}
 	free(beta->map->map);
 	free(beta->map);
-	while (j < 5)
+	while (j < 4)
 	{
 		i = 0;
 		while (i < beta->textur[j].height)

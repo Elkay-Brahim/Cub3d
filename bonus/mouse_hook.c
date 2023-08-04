@@ -6,7 +6,7 @@
 /*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 17:18:53 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 18:39:10 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/04 20:01:47 by bchifour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	mouse_hook(int x, int y, t_beta *beta)
 	beta->pdx = cos(beta->_const);
 	beta->pdy = sin(beta->_const);
 	mlx_clear_window(beta->mlx, beta->win);
-	bzero(beta->world.addr, sizeof(int) * (SCREENWIDTH) * SCREENHEIGHT);
 	backgrand(beta);
 	randring(beta);
 	mlx_put_image_to_window(beta->mlx, beta->win, beta->world.img, 0, 0);
