@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 20:19:40 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 10:34:09 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@
 # include <math.h>
 # include "parsing_map/parsing.h"
 # include <unistd.h>
-# include <stdbool.h>
-# include <time.h>
 
 typedef struct s_data {
 	void	*img;
@@ -81,9 +79,6 @@ typedef struct s_beta
 	float	intersect_y;
 	float	dx;
 	float	dy;
-	time_t	current_time;
-	time_t	start_time;
-	int		index;
 	float	shift_x;
 	float	shift_y;
 	int		player_x;
@@ -98,7 +93,6 @@ typedef struct s_cord
 {
 	float	x;
 	float	y;
-	int		color;
 }		t_cord;
 
 typedef struct s_dda

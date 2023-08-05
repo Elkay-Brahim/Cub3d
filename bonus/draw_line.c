@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 10:51:16 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/04 18:27:38 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 10:38:48 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	draw_textur(t_beta *beta, t_cord p1, t_cord p2)
 	t_dda	line;
 	int		i;
 
-	i = 1;
+	i = 0;
 	line.dx = p1.x - p2.x;
 	line.dy = p1.y - p2.y;
 	line.max = fmax(fabs(line.dx), fabs(line.dy));

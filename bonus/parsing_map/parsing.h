@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:23 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/04 18:35:20 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 10:35:43 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <fcntl.h>
 # include <unistd.h>
-# include <stdio.h>
 # include "get_next_line/get_next_line.h"
 # include "utils/utils.h"
 

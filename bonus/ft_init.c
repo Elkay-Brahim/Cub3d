@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 09:43:40 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 19:26:22 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 10:46:12 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	ft_init(t_beta *beta, t_map_s *first)
 	mlx_hook(beta->win, 2, 0, key_hook, beta);
 	mlx_loop_hook(beta->mlx, close_door, beta);
 	mlx_hook(beta->win, 6, 0L, mouse_hook, beta);
+	mlx_hook(beta->win, 17, 0, cross_window, beta);
 	mlx_loop(beta->mlx);
 	return (0);
 }

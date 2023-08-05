@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:37:17 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 19:26:08 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 10:46:38 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define TEXTUR_N 1
 # define TEXTUR_E 2
 # define TEXTUR_S 3
+# define TEXTUR_D 4
 
 // Angle Between Rays
 # define ABR 0.00077
@@ -31,10 +32,10 @@
 # include <mlx.h>
 # include <stdlib.h>
 # include <math.h>
-# include "parsing_map/parsing.h"
 # include <unistd.h>
 # include <stdbool.h>
 # include <time.h>
+# include "parsing_map/parsing.h"
 
 typedef struct s_data {
 	void	*img;
@@ -84,7 +85,6 @@ typedef struct s_beta
 	time_t	current_time;
 	time_t	start_time;
 	int		door_check;
-	int		index;
 	bool	door;
 	float	shift_x;
 	float	shift_y;
@@ -100,7 +100,6 @@ typedef struct s_cord
 {
 	float	x;
 	float	y;
-	int		color;
 }		t_cord;
 
 typedef struct s_dda
@@ -151,5 +150,6 @@ int		break_of_x(t_beta *beta);
 void	backgrand(t_beta *beta);
 void	_fold_of_view(t_beta *beta, int keycode);
 void	_dda(t_beta *beta);
+int		cross_window(t_beta *beta);
 
 #endif
