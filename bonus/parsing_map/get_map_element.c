@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map_element.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 20:12:11 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/04 18:34:16 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 13:21:28 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,18 @@ int	check_color(t_map_s *map, char **sp)
 			map->c_color = rgb_to_int(sp[1], 0);
 		else
 		{
-			write(2, "invalid color identifier\n", 25);
+			write(2, "Error\ninvalid color identifier\n", 31);
 			return (1);
 		}
 	}
 	else
 	{
-		write(2, "invalid color values\n", 21);
+		write(2, "Error\ninvalid color values\n", 27);
 		return (1);
 	}
 	if (map->f_color == -1 || map->c_color == -1)
 	{
-		write(2, "invalid color value\n", 20);
+		write(2, "Error\ninvalid color value\n", 26);
 		return (1);
 	}
 	return (0);
@@ -84,13 +84,13 @@ int	check_path(t_map_s *map, char **sp)
 			map->door = ft_strdup(sp[1]);
 		else
 		{
-			write(2, "invalid path identifier\n", 24);
+			write(2, "Error\ninvalid path identifier\n", 30);
 			return (1);
 		}
 	}
 	else
 	{
-		write(2, "invalid path identifier\n", 24);
+		write(2, "Error\ninvalid path identifier\n", 30);
 		return (1);
 	}
 	return (0);
@@ -105,7 +105,7 @@ int	get_map_element(t_map_s *map, char *line, int type)
 	if (!sp || sp[0] == NULL)
 	{
 		free_double(sp);
-		write (2, "wrong element\n", 14);
+		write (2, "Error\nwrong element\n", 20);
 		return (1);
 	}
 	if (type == 1 && check_path(map, sp) == 1)

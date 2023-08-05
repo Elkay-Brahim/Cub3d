@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 20:21:00 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/04 17:06:35 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 13:21:43 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ t_map_s	*get_map(t_line *data)
 	if (check_data(map) != 0 || get_world(data, map) != 0)
 	{
 		free_map(map);
-		write(2, "invalid path\n", 13);
+		write(2, "Error\ninvalid path\n", 19);
 		return (NULL);
 	}
 	return (map);

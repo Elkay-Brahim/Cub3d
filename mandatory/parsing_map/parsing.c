@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 17:24:07 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/04 15:46:46 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 13:27:01 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ int	check_file(char *map_path)
 
 	if (check_ext(map_path, ".cub") != 0)
 	{
-		write(2, "Error extention\n", 15);
+		write(2, "Error\nextention\n", 16);
 		return (-1);
 	}
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
 	{
-		write(2, "Error read map\n", 15);
+		write(2, "Error\nread map\n", 15);
 		return (-1);
 	}
 	return (fd);
@@ -71,7 +71,7 @@ t_map_s	*littel_world(char *map_path, int fd)
 	base_line = get_data_map(fd);
 	if (base_line == NULL)
 	{
-		write(2, "empty file\n", 11);
+		write(2, "Error\nempty file\n", 17);
 		close(fd);
 		return (NULL);
 	}

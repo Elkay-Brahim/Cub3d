@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 20:21:00 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/04 19:41:32 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 13:25:41 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	check_data(t_map_s *map)
 	if (map->n_path == NULL || map->s_path == NULL || map->w_path == NULL || \
 		map->e_path == NULL || map->f_color == -2 || map->c_color == -2)
 	{
-		write(2, "invalid path\n", 13);
+		write(2, "Error\ninvalid path\n", 19);
 		return (1);
 	}
 	if (check_ext(map->n_path, ".xpm") == 1 || \
@@ -67,12 +67,12 @@ int	check_data(t_map_s *map)
 		check_ext(map->w_path, ".xpm") == 1 || \
 		check_ext(map->e_path, ".xpm") == 1)
 	{
-		write(2, "invalid path\n", 13);
+		write(2, "Error\ninvalid path\n", 19);
 		return (1);
 	}
 	if (exist_file(map) != 0)
 	{
-		write(2, "invalid path\n", 13);
+		write(2, "Error\ninvalid path\n", 19);
 		return (1);
 	}
 	return (0);

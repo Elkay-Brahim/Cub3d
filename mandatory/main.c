@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 17:45:55 by bchifour          #+#    #+#             */
-/*   Updated: 2023/08/04 18:06:56 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 13:32:15 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,14 @@ int	main(int ac, char **av)
 			first->height * B > SCREENHEIGHT))
 		{
 			free_map(first);
-			write(2, "the map is so large\n", 20);
+			write(2, "Error\nthe map is so large\n", 26);
 			return (1);
 		}
 		if (first == NULL)
+		{
+			write (2, "Error\n", 6);
 			return (1);
+		}
 		beta = ft_calloc(sizeof(t_beta), 1);
 		ft_init(beta, first);
 	}

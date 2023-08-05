@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_world.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bchifour <bchifour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rrasezin <rrasezin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 20:26:04 by rrasezin          #+#    #+#             */
-/*   Updated: 2023/08/04 19:39:29 by bchifour         ###   ########.fr       */
+/*   Updated: 2023/08/05 13:26:18 by rrasezin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	check_map(t_map_s *map, char *line)
 		i++;
 	if (line[i] != '\0' || check_content(line, &map->direction) != 0)
 	{
-		write (2, "additonal data\n", 15);
+		write (2, "Error\nInvalid component\n", 24);
 		return (1);
 	}
 	map_2d = ft_split(line, '\n');
@@ -112,7 +112,7 @@ int	get_world(t_line *data, t_map_s *map)
 	}
 	else
 	{
-		write (2, "-_- there is no world here\n", 27);
+		write (2, "Error\n-_- there is no world here\n", 33);
 		return (1);
 	}
 	free(map_line);
